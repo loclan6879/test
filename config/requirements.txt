@@ -1,0 +1,31 @@
+# 🎬 EverTrace Video Processing - Dependencies
+
+# Web Framework
+flask>=2.0.0
+werkzeug>=2.0.0
+
+# AI Face Detection & Smart Cropping
+mediapipe>=0.10.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+pillow>=10.0.0
+
+# Video Processing & Editing
+moviepy>=1.0.3
+imageio>=2.31.0
+imageio-ffmpeg>=0.4.8
+
+# Audio Processing
+pydub>=0.25.1
+
+# System & Performance
+psutil>=5.9.0
+requests>=2.31.0
+
+# Optional: Advanced image processing
+scikit-image>=0.21.0
+matplotlib>=3.7.0
+
+# Development & Debugging
+colorama>=0.4.6
+tqdm>=4.65.0

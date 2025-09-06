@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EverLiving - Đăng nhập & Đăng ký</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables - EverLiving Theme */
+        :root {
+            /* Colors */
+            --bg-primary: #F5F5DC;      /* Kem - nền chính */
+            --text-primary: #333333;    /* Xám đậm - chữ chính */
+            --color-primary: #556B2F;   /* Xanh rêu - màu chủ đạo */
+            --color-accent: #8B7355;    /* Nâu cà phê - màu nhấn */
+            --color-secondary: #B0C4DE; /* Xanh nhạt - màu phụ */
+            --color-tertiary: #6B8A5B;  /* Xanh oliu - màu phụ trợ */
+            --white-soft: rgba(255, 255, 255, 0.95);
+            --shadow-light: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-medium: 0 4px 12px rgba(0,0,0,0.15);
+            --border-light: 1px solid var(--color-secondary);
+            
+            /* Typography */
+            --font-heading: 'Lora', serif;
+            --font-body: 'Inter', sans-serif;
+            --font-script: 'Dancing Script', cursive;
+            
+            /* Spacing */
+            --radius: 8px;
+            --radius-large: 12px;
+            --transition: all 0.3s ease;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            background: var(--white-soft);
+            border-radius: var(--radius-large);
+            box-shadow: var(--shadow-medium);
+            overflow: hidden;
+            width: 100%;
+            max-width: 450px;
+            animation: slideUp 0.6s ease-out;
+            border: var(--border-light);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-tertiary) 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            position: relative;
+        }
+
+        /* Language toggle for login page */
+        .login-language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex !important;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.25);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .login-language-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .login-language-label {
+            color: white;
+            font-weight: 600;
+        }
+
+        .login-toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .login-toggle-switch.active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .login-toggle-switch.active .login-toggle-slider {
+            transform: translateX(20px);
+        }
+
+        .login-flag-icon {
+            width: 10px;
+            height: 7px;
+            border-radius: 1px;
+            object-fit: cover;
+        }
+
+        /* Responsive for mobile */
+        @media (max-width: 480px) {
+            .login-language-toggle {
+                top: 15px;
+                right: 15px;
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+            
+            .login-toggle-switch {
+                width: 35px;
+                height: 18px;
+            }
+            
+            .login-toggle-slider {
+                width: 14px;
+                height: 14px;
+            }
+            
+            .login-flag-icon {
+                width: 8px;
+                height: 6px;
+            }
+            
+            .login-toggle-switch.active .login-toggle-slider {
+                transform: translateX(17px);
+            }
+        }
+
+        .header h1 {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-family: var(--font-body);
+        }
+
+        .features-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .feature-item {
+            font-size: 14px;
+            opacity: 0.8;
+            color: white;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-primary);
+            border-bottom: var(--border-light);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: var(--font-body);
+            transition: var(--transition);
+            color: var(--color-accent);
+        }
+
+        .tab.active {
+            background: var(--white-soft);
+            color: var(--color-primary);
+            border-bottom: 3px solid var(--color-primary);
+            box-shadow: var(--shadow-light);
+        }
+
+        .tab:hover {
+            background: rgba(85, 107, 47, 0.1);
+            color: var(--color-primary);
+        }
+
+        .tab.active:hover {
+            background: var(--white-soft);
+        }
+
+        .form-container {
+            padding: 30px;
+            background: var(--white-soft);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--color-secondary);
+            border-radius: var(--radius);
+            font-size: 16px;
+            transition: var(--transition);
+            background: var(--white-soft);
+            font-family: var(--font-body);
+            color: var(--text-primary);
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(85, 107, 47, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+            font-family: var(--font-body);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-tertiary) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+            opacity: 0.9;
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+            font-family: var(--font-body);
+        }
+
+        .alert-success {
+            background: rgba(85, 107, 47, 0.1);
+            color: var(--color-primary);
+            border: 1px solid var(--color-primary);
+        }
+
+        .alert-error {
+            background: rgba(139, 115, 85, 0.1);
+            color: var(--color-accent);
+            border: 1px solid var(--color-accent);
+        }
+
+        .alert-info {
+            background: rgba(176, 196, 222, 0.1);
+            color: var(--color-secondary);
+            border: 1px solid var(--color-secondary);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .verification-section {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: rgba(85, 107, 47, 0.05);
+            border-radius: var(--radius);
+            margin-top: 20px;
+            border: var(--border-light);
+        }
+
+        .verification-section.show {
+            display: block;
+        }
+
+        .code-input {
+            font-size: 20px;
+            text-align: center;
+            letter-spacing: 5px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .resend-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .resend-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--color-accent);
+            font-size: 14px;
+            background: var(--bg-primary);
+            font-family: var(--font-body);
+            border-top: var(--border-light);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- Language Toggle -->
+            <div class="login-language-toggle" onclick="toggleLoginLanguage()">
+                <span class="login-language-label" id="loginLanguageLabel">VI</span>
+                <div class="login-toggle-switch" id="loginLanguageSwitch">
+                    <div class="login-toggle-slider">
+                        <img src="/static/assets/flag/vn.png" alt="VN" class="login-flag-icon">
+                    </div>
+                </div>
+            </div>
+            
+            <h1>🎬 EverLiving</h1>
+            <p data-login-translate="app_subtitle">Tạo video kỷ niệm đẹp từ những hình ảnh yêu thương</p>
+            
+            <!-- Features preview -->
+            <div class="features-preview">
+                <div class="feature-item">
+                    <span data-login-translate="feature1">📸 Upload hình ảnh và tạo video tự động</span>
+                </div>
+                <div class="feature-item">
+                    <span data-login-translate="feature2">🎵 Thêm nhạc nền cho video của bạn</span>
+                </div>
+                <div class="feature-item">
+                    <span data-login-translate="feature3">⚡ Hiệu ứng chuyển cảnh đẹp mắt</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('login')" data-login-translate="login_tab">Đăng nhập</button>
+            <button class="tab" onclick="switchTab('register')" data-login-translate="register_tab">Đăng ký</button>
+        </div>
+
+        <div class="form-container">
+            <!-- Alert messages -->
+            <div id="alert" class="alert"></div>
+            
+            <!-- Loading indicator -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p data-login-translate="processing">Đang xử lý...</p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="tab-content active">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="login-username" data-login-translate="username_label">Tên đăng nhập</label>
+                        <input type="text" id="login-username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password" data-login-translate="password_label">Mật khẩu</label>
+                        <input type="password" id="login-password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" data-login-translate="login_btn">Đăng nhập</button>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="tab-content">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="register-username" data-login-translate="username_label">Tên đăng nhập</label>
+                        <input type="text" id="register-username" name="username" required 
+                               pattern="[a-zA-Z0-9_]{3,20}" 
+                               title="3-20 ký tự, chỉ chữ, số và dấu gạch dưới">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email" data-login-translate="email_label">Email</label>
+                        <input type="email" id="register-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password" data-login-translate="password_label">Mật khẩu</label>
+                        <input type="password" id="register-password" name="password" required 
+                               minlength="6" title="Ít nhất 6 ký tự">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm-password" data-login-translate="confirm_password">Nhập lại mật khẩu</label>
+                        <input type="password" id="register-confirm-password" name="confirm_password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" data-login-translate="register_btn">Đăng ký</button>
+                </form>
+
+                <!-- Verification Section -->
+                <div id="verification-section" class="verification-section">
+                    <h3 data-login-translate="verification_title">📧 Xác thực email</h3>
+                    <p data-login-translate="verification_desc">Mã xác thực đã được gửi đến email của bạn</p>
+                    <div class="form-group">
+                        <label for="verification-code" data-login-translate="verification_input">Nhập mã xác thực (6 số)</label>
+                        <input type="text" id="verification-code" class="code-input" 
+                               maxlength="6" pattern="[0-9]{6}" placeholder="000000">
+                    </div>
+                    <button onclick="handleVerification()" class="btn btn-primary" data-login-translate="verify_btn">Xác thực</button>
+                    <br>
+                    <a href="#" class="resend-link" onclick="resendCode()" data-login-translate="resend_btn">Gửi lại mã</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            © 2025 EverLiving. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        let currentEmail = '';
+        
+        function switchTab(tabName) {
+            // Remove active class from all tabs and contents
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-form').classList.add('active');
+            
+            // Clear alerts and hide verification
+            hideAlert();
+            hideVerification();
+        }
+
+        function showAlert(message, type = 'error') {
+            const alert = document.getElementById('alert');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alert.style.display = 'block';
+            
+            // Auto hide after 5 seconds
+            setTimeout(hideAlert, 5000);
+        }
+
+        function hideAlert() {
+            document.getElementById('alert').style.display = 'none';
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showVerification() {
+            document.getElementById('verification-section').classList.add('show');
+        }
+
+        function hideVerification() {
+            document.getElementById('verification-section').classList.remove('show');
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            hideAlert();
+            showLoading();
+
+            const formData = new FormData(event.target);
+            const data = {
+                username: formData.get('username'),
+                password: formData.get('password')
+            };
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                hideLoading();
+
+                if (result.success) {
+                    showAlert(result.message, 'success');
+                    // Store session info
+                    sessionStorage.setItem('username', result.username);
+                    sessionStorage.setItem('session_id', result.session_id);
+                    
+                    // Redirect to main app after 1 second
+                    setTimeout(() => {
+                        window.location.href = '/main';
+                    }, 1000);
+                } else {
+                    showAlert(result.message, 'error');
+                }
+            } catch (error) {
+                hideLoading();
+                showAlert('Lỗi kết nối. Vui lòng thử lại!', 'error');
+                console.error('Login error:', error);
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            hideAlert();
+            hideVerification();
+
+            // Check password match
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            
+            if (password !== confirmPassword) {
+                showAlert('Mật khẩu nhập lại không khớp!', 'error');
+                return;
+            }
+
+            showLoading();
+
+            const formData = new FormData(event.target);
+            const data = {
+                username: formData.get('username'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                confirm_password: formData.get('confirm_password')
+            };
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                hideLoading();
+
+                if (result.success) {
+                    if (result.requires_verification) {
+                        currentEmail = result.email;
+                        showAlert(result.message, 'info');
+                        showVerification();
+                    } else {
+                        showAlert(result.message, 'success');
+                    }
+                } else {
+                    showAlert(result.message, 'error');
+                }
+            } catch (error) {
+                hideLoading();
+                showAlert('Lỗi kết nối. Vui lòng thử lại!', 'error');
+                console.error('Register error:', error);
+            }
+        }
+
+        async function handleVerification() {
+            const code = document.getElementById('verification-code').value;
+            
+            if (!code || code.length !== 6) {
+                showAlert('Vui lòng nhập mã xác thực 6 số!', 'error');
+                return;
+            }
+
+            hideAlert();
+            showLoading();
+
+            try {
+                const response = await fetch('/api/verify_email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: currentEmail,
+                        verification_code: code
+                    })
+                });
+
+                const result = await response.json();
+                hideLoading();
+
+                if (result.success) {
+                    showAlert(result.message, 'success');
+                    hideVerification();
+                    
+                    // Switch to login tab after 2 seconds
+                    setTimeout(() => {
+                        switchTab('login');
+                        document.getElementById('login-username').value = result.username;
+                    }, 2000);
+                } else {
+                    showAlert(result.message, 'error');
+                }
+            } catch (error) {
+                hideLoading();
+                showAlert('Lỗi kết nối. Vui lòng thử lại!', 'error');
+                console.error('Verification error:', error);
+            }
+        }
+
+        async function resendCode() {
+            if (!currentEmail) {
+                showAlert('Không tìm thấy thông tin email!', 'error');
+                return;
+            }
+
+            hideAlert();
+            showLoading();
+
+            try {
+                // Get registration data to resend
+                const registerForm = document.getElementById('register-form').querySelector('form');
+                const formData = new FormData(registerForm);
+                
+                const response = await fetch('/api/resend_verification', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: formData.get('username'),
+                        email: currentEmail,
+                        password: formData.get('password'),
+                        confirm_password: formData.get('confirm_password')
+                    })
+                });
+
+                const result = await response.json();
+                hideLoading();
+
+                if (result.success) {
+                    showAlert('Mã xác thực mới đã được gửi!', 'info');
+                } else {
+                    showAlert(result.message, 'error');
+                }
+            } catch (error) {
+                hideLoading();
+                showAlert('Lỗi gửi lại mã. Vui lòng thử lại!', 'error');
+                console.error('Resend error:', error);
+            }
+        }
+
+        // Auto-format verification code input
+        document.getElementById('verification-code').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // Language system for login page
+        let loginCurrentLanguage = localStorage.getItem('language') || 'vi';
+
+        const loginTranslations = {
+            vi: {
+                login_tab: 'Đăng nhập',
+                register_tab: 'Đăng ký',
+                app_subtitle: 'Tạo video kỷ niệm đẹp từ những hình ảnh yêu thương',
+                username_label: 'Tên đăng nhập',
+                password_label: 'Mật khẩu',
+                login_btn: 'Đăng nhập',
+                register_btn: 'Đăng ký',
+                email_label: 'Email',
+                confirm_password: 'Nhập lại mật khẩu',
+                feature1: '📸 Upload hình ảnh và tạo video tự động',
+                feature2: '🎵 Thêm nhạc nền cho video của bạn',
+                feature3: '⚡ Hiệu ứng chuyển cảnh đẹp mắt',
+                processing: 'Đang xử lý...',
+                verification_title: '📧 Xác thực email',
+                verification_desc: 'Chúng tôi đã gửi mã xác thực đến email của bạn.',
+                verification_input: 'Nhập mã xác thực (6 chữ số)',
+                verify_btn: 'Xác thực',
+                resend_btn: 'Gửi lại mã'
+            },
+            en: {
+                login_tab: 'Login',
+                register_tab: 'Register',
+                app_subtitle: 'Create beautiful memory videos from your beloved photos',
+                username_label: 'Username',
+                password_label: 'Password',
+                login_btn: 'Login',
+                register_btn: 'Register',
+                email_label: 'Email',
+                confirm_password: 'Confirm Password',
+                feature1: '📸 Upload images and create videos automatically',
+                feature2: '🎵 Add background music to your videos',
+                feature3: '⚡ Beautiful transition effects',
+                processing: 'Processing...',
+                verification_title: '📧 Email Verification',
+                verification_desc: 'We have sent a verification code to your email.',
+                verification_input: 'Enter verification code (6 digits)',
+                verify_btn: 'Verify',
+                resend_btn: 'Resend Code'
+            }
+        };
+
+        function toggleLoginLanguage() {
+            loginCurrentLanguage = loginCurrentLanguage === 'vi' ? 'en' : 'vi';
+            localStorage.setItem('language', loginCurrentLanguage);
+            updateLoginLanguage();
+            updateLoginLanguageToggle();
+        }
+
+        function updateLoginLanguageToggle() {
+            const loginLanguageLabel = document.getElementById('loginLanguageLabel');
+            const loginLanguageSwitch = document.getElementById('loginLanguageSwitch');
+            const loginLanguageSlider = loginLanguageSwitch.querySelector('.login-toggle-slider');
+            
+            if (loginCurrentLanguage === 'vi') {
+                loginLanguageLabel.textContent = 'VI';
+                loginLanguageSlider.innerHTML = '<img src="/static/assets/flag/vn.png" alt="VN" class="login-flag-icon">';
+                loginLanguageSwitch.classList.remove('active');
+            } else {
+                loginLanguageLabel.textContent = 'EN';
+                loginLanguageSlider.innerHTML = '<img src="/static/assets/flag/en.png" alt="EN" class="login-flag-icon">';
+                loginLanguageSwitch.classList.add('active');
+            }
+        }
+
+        function updateLoginLanguage() {
+            const elements = document.querySelectorAll('[data-login-translate]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-login-translate');
+                if (loginTranslations[loginCurrentLanguage] && loginTranslations[loginCurrentLanguage][key]) {
+                    element.textContent = loginTranslations[loginCurrentLanguage][key];
+                }
+            });
+        }
+
+        // Initialize language on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLoginLanguageToggle();
+            updateLoginLanguage();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug EverTrace JavaScript</title>
+</head>
+<body>
+    <h2>Debug EverTrace JavaScript Functions</h2>
+    <p>Open Console (F12) to see debug information</p>
+    
+    <button onclick="testMainFunctions()">Test Main Functions</button>
+    <button onclick="testBackupFunctions()">Test Backup Functions</button>
+    <div id="result"></div>
+    
+    <script>
+        function testMainFunctions() {
+            console.log('=== Testing Main Functions ===');
+            const functions = [
+                'showRegisterForm', 
+                'showLoginForm', 
+                'login', 
+                'registerUser', 
+                'verifyRegistration',
+                'resendVerificationCode',
+                'backToRegistration'
+            ];
+            
+            let results = [];
+            functions.forEach(funcName => {
+                if (typeof window[funcName] === 'function') {
+                    console.log(`✅ ${funcName}() - EXISTS`);
+                    results.push(`✅ ${funcName}() - EXISTS`);
+                } else {
+                    console.log(`❌ ${funcName}() - NOT FOUND`);
+                    results.push(`❌ ${funcName}() - NOT FOUND`);
+                }
+            });
+            
+            document.getElementById('result').innerHTML = 
+                '<h3>Main Functions Test:</h3>' + results.join('<br>');
+        }
+        
+        function testBackupFunctions() {
+            console.log('=== Testing Backup Functions ===');
+            
+            // Try to trigger backup functions
+            if (typeof showRegisterForm === 'undefined') {
+                console.log('Creating backup showRegisterForm...');
+                window.showRegisterForm = function() {
+                    console.log('BACKUP: showRegisterForm called');
+                    alert('Backup showRegisterForm working!');
+                };
+            }
+            
+            if (typeof showLoginForm === 'undefined') {
+                console.log('Creating backup showLoginForm...');
+                window.showLoginForm = function() {
+                    console.log('BACKUP: showLoginForm called');
+                    alert('Backup showLoginForm working!');
+                };
+            }
+            
+            // Test the functions
+            try {
+                showRegisterForm();
+                console.log('✅ showRegisterForm() executed successfully');
+            } catch (error) {
+                console.log('❌ showRegisterForm() failed:', error);
+            }
+            
+            try {
+                showLoginForm();  
+                console.log('✅ showLoginForm() executed successfully');
+            } catch (error) {
+                console.log('❌ showLoginForm() failed:', error);
+            }
+            
+            document.getElementById('result').innerHTML = 
+                '<h3>Backup Functions Test:</h3>Check console for results';
+        }
+        
+        // Test on page load
+        window.onload = function() {
+            console.log('=== Page Loaded - Auto Testing ===');
+            testMainFunctions();
+        };
+    </script>
+</body>
+</html>

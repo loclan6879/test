@@ -1,0 +1,47 @@
+🚀 QUICK PROMPT TEMPLATES - EVERTRACE
+=====================================
+
+📋 BASIC TEMPLATES:
+
+🎨 UI Changes:
+"Tôi muốn thêm [TÍNH NĂNG] vào giao diện:
+- Vị trí: [VỊ TRÍ] 
+- Chức năng: [MÔ TẢ]
+Cập nhật templates/main_spa.html và static/style.css"
+
+🔧 Backend API:
+"Tôi muốn thêm API [TÊN]:
+- Endpoint: [ĐƯỜNG DẪN]
+- Method: [GET/POST] 
+- Chức năng: [MÔ TẢ]
+Cập nhật src/app_restructured.py"
+
+🎬 Media Processing:
+"Tôi muốn thêm chức năng xử lý [MEDIA]:
+- Input: [ĐỊNH DẠNG VÀO]
+- Output: [ĐỊNH DẠNG RA] 
+- Chức năng: [MÔ TẢ]
+Cập nhật src/video_processor.py"
+
+🔐 Authentication:
+"Tôi muốn thêm bảo mật [TÍNH NĂNG]:
+- Mô tả: [CHI TIẾT]
+- Level: [CƠ BẢN/NÂNG CAO]
+Cập nhật src/auth_service.py"
+
+📁 FILE MAPPING:
+- UI → templates/main_spa.html + static/style.css
+- API → src/app_restructured.py  
+- Auth → src/auth_service.py
+- Media → src/video_processor.py
+- Config → config/[name].py
+- Utils → scripts/[name].py
+- Docs → docs/[name].md
+
+🎯 ACTION KEYWORDS:
+"Thêm tính năng" | "Sửa lỗi" | "Cải thiện" | "Tối ưu" | "Tích hợp"
+
+⚠️ LƯU Ý:
+- KHÔNG đụng LuuTru_User/
+- Luôn specify đường dẫn file
+- Test sau khi implement

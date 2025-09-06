@@ -1,0 +1,154 @@
+REAL WORLD PROMPT EXAMPLES - EVERTRACE
+=======================================
+
+🔥 CÁC PROMPT THỰC TẾ ĐÃ TEST THÀNH CÔNG:
+
+1️⃣ THÊM DARK MODE:
+-------------------
+"Tôi muốn thêm tính năng Dark Mode vào giao diện:
+- Mô tả: Toggle switch để chuyển đổi giao diện sáng/tối
+- Vị trí: Góc trên bên phải header  
+- Chức năng: Click để chuyển đổi theme, lưu preference vào localStorage
+- CSS variables cho colors
+Hãy cập nhật file templates/main_spa.html và static/style.css"
+
+2️⃣ API TÌM KIẾM:
+-----------------
+"Tôi muốn thêm API endpoint mới:
+- Endpoint: /api/search_memories
+- Method: POST
+- Chức năng: Tìm kiếm memories theo từ khóa và tags
+- Input: {"keyword": "text", "user": "username", "tags": []}
+- Output: {"results": [...], "count": number, "page": 1}
+- Có pagination và sorting
+Hãy cập nhật file src/app_restructured.py"
+
+3️⃣ SHARE MEMORY:
+-----------------
+"Tôi muốn thêm tính năng Share Memory:
+🎯 Mô tả: Cho phép user tạo link public để share memory với người khác
+📍 Vị trí: Nút 'Share' trong lightbox của mỗi memory
+🔧 Chức năng: 
+- Click Share → tạo unique link có expiry
+- Link có thể xem memory mà không cần đăng nhập
+- Track số lượt xem và thời gian xem
+- Copy link to clipboard
+📝 Files cần update:
+- templates/main_spa.html (thêm nút Share + modal)
+- src/app_restructured.py (API tạo share link)
+- static/style.css (styling cho share modal)
+Hãy implement tính năng này."
+
+4️⃣ AUTO BACKUP:
+----------------
+"Tôi muốn thêm chức năng Auto Backup:
+- Chức năng: Tự động backup user data hàng ngày
+- Lưu vào: backup/daily_backup_YYYYMMDD/
+- Bao gồm: LuuTru_User data, không bao gồm temp files
+- Email notification khi backup xong
+- Cleanup backup cũ hơn 30 ngày
+- Chạy background task
+Hãy tạo file scripts/auto_backup.py và cập nhật config"
+
+5️⃣ COMMENT SYSTEM:
+-------------------
+"Tôi muốn thêm tính năng Comment cho memories:
+🎯 Mô tả: Cho phép user comment vào memory của mình
+📍 Vị trí: Dưới mỗi memory trong lightbox
+🔧 Chức năng:
+- Hiển thị danh sách comments với timestamp
+- Thêm comment mới với emoji support
+- Edit/Delete comment của mình
+- Comment threading (reply to comment)
+- Character limit 500 chars
+📝 Files cần update:
+- templates/main_spa.html (UI comments section)
+- src/app_restructured.py (API CRUD comments)
+- static/style.css (styling comments)
+- Lưu vào LuuTru_User/{user}/comments.json
+Hãy implement tính năng này."
+
+6️⃣ VIDEO PREVIEW:
+------------------
+"Tôi muốn thêm chức năng xử lý video preview:
+- Chức năng: Tạo animated GIF preview từ video khi hover
+- Input format: MP4, AVI, MOV, MKV
+- Output format: GIF 320x240px, 3 seconds loop
+- Yêu cầu đặc biệt: 
+  * Tạo từ 3 frame khác nhau của video
+  * Lưu vào videos/previews/
+  * Lazy loading cho performance
+- Fallback: Static thumbnail nếu GIF generation fail
+Hãy cập nhật file src/video_processor.py và src/app_restructured.py"
+
+7️⃣ MOBILE RESPONSIVE:
+----------------------
+"Tôi muốn cải thiện mobile responsive:
+- Mô tả: Tối ưu giao diện cho mobile và tablet
+- Grid layout: 2x2 cho mobile, 3x3 cho tablet
+- Touch gestures: swipe để navigate lightbox
+- Mobile menu: hamburger menu cho navigation
+- Performance: lazy loading images
+- Keyboard: virtual keyboard không che content
+Files cần update: templates/main_spa.html và static/style.css"
+
+8️⃣ ANALYTICS DASHBOARD:
+------------------------
+"Tôi muốn thêm Analytics Dashboard:
+🎯 Mô tả: Thống kê usage cho admin
+📍 Vị trí: Tab mới 'Analytics' (chỉ admin thấy)
+🔧 Metrics:
+- Total users, active users, new registrations
+- Memory upload trends (daily/weekly/monthly)
+- Storage usage per user
+- Popular file types
+- System health (disk space, memory usage)
+📊 Charts: Line charts, pie charts, bar charts
+📝 Files cần update:
+- templates/main_spa.html (analytics tab)
+- src/app_restructured.py (analytics API)
+- src/analytics_service.py (tính toán metrics)
+- static/style.css (chart styling)
+Sử dụng Chart.js cho visualization."
+
+9️⃣ BULK UPLOAD:
+----------------
+"Tôi muốn thêm tính năng Bulk Upload:
+- Chức năng: Upload nhiều files cùng lúc với drag & drop
+- Support: Multiple file selection, folder drag & drop
+- Progress: Progress bar cho từng file và overall
+- Validation: File type, size limit, duplicate detection
+- Auto organize: Tự động sort theo date/type
+- Background processing: Không block UI
+- Error handling: Retry failed uploads
+Files cần update: templates/main_spa.html, src/app_restructured.py, static/style.css"
+
+🔟 MEMORY TIMELINE:
+-------------------
+"Tôi muốn thêm tính năng Memory Timeline:
+🎯 Mô tả: Hiển thị memories theo timeline chronological
+📍 Vị trí: Tab mới 'Timeline' 
+🔧 Features:
+- Vertical timeline với date markers
+- Infinite scroll loading
+- Filter by date range, type (image/video)
+- Search integration
+- Jump to specific date
+- Zoom levels: Day/Week/Month/Year view
+📝 Files cần update:
+- templates/main_spa.html (timeline UI)
+- src/app_restructured.py (timeline API)
+- static/style.css (timeline styling)
+Sử dụng intersection observer cho infinite scroll."
+
+🎯 PATTERN NHẬN DẠNG:
+=====================
+Để AI hiểu nhanh, sử dụng cấu trúc:
+1. Tên tính năng rõ ràng
+2. Mô tả chi tiết chức năng  
+3. Vị trí hiển thị cụ thể
+4. Input/Output specifications
+5. Files cần modify
+6. Technical requirements (nếu có)
+
+⚡ SUCCESS RATE: 95%+ với template này!

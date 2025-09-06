@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test JavaScript Functions</title>
+</head>
+<body>
+    <h2>Test EverTrace JavaScript Functions</h2>
+    
+    <button onclick="testShowRegisterForm()">Test showRegisterForm()</button>
+    <button onclick="testShowLoginForm()">Test showLoginForm()</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        function testShowRegisterForm() {
+            try {
+                // Try to call the function
+                if (typeof showRegisterForm === 'function') {
+                    document.getElementById('result').innerHTML = 
+                        '<p style="color: green;">✅ showRegisterForm() function exists</p>';
+                } else {
+                    document.getElementById('result').innerHTML = 
+                        '<p style="color: red;">❌ showRegisterForm() function not found</p>';
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    '<p style="color: red;">❌ Error: ' + error.message + '</p>';
+            }
+        }
+        
+        function testShowLoginForm() {
+            try {
+                // Try to call the function
+                if (typeof showLoginForm === 'function') {
+                    document.getElementById('result').innerHTML = 
+                        '<p style="color: green;">✅ showLoginForm() function exists</p>';
+                } else {
+                    document.getElementById('result').innerHTML = 
+                        '<p style="color: red;">❌ showLoginForm() function not found</p>';
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    '<p style="color: red;">❌ Error: ' + error.message + '</p>';
+            }
+        }
+        
+        // Test if functions exist on page load
+        window.onload = function() {
+            const functions = ['showRegisterForm', 'showLoginForm', 'registerUser', 'verifyRegistration'];
+            let result = '<h3>Function Check Results:</h3>';
+            
+            functions.forEach(funcName => {
+                if (typeof window[funcName] === 'function') {
+                    result += `<p style="color: green;">✅ ${funcName}() - OK</p>`;
+                } else {
+                    result += `<p style="color: red;">❌ ${funcName}() - NOT FOUND</p>`;
+                }
+            });
+            
+            document.getElementById('result').innerHTML = result;
+        };
+    </script>
+</body>
+</html>

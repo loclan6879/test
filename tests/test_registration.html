@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Registration API</title>
+</head>
+<body>
+    <h2>Test EverTrace Registration</h2>
+    
+    <h3>1. Register User</h3>
+    <button onclick="testRegister()">Test Register</button>
+    <div id="registerResult"></div>
+    
+    <h3>2. Verify Code</h3>
+    <input type="text" id="verifyCode" placeholder="Enter 6-digit code">
+    <button onclick="testVerify()">Test Verify</button>
+    <div id="verifyResult"></div>
+    
+    <script>
+        function testRegister() {
+            fetch('http://localhost:8080/register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    username: 'testuser',
+                    email: 'test@example.com', 
+                    password: '123456',
+                    confirm_password: '123456'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('registerResult').innerHTML = 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            })
+            .catch(error => {
+                document.getElementById('registerResult').innerHTML = 
+                    '<pre>Error: ' + error + '</pre>';
+            });
+        }
+        
+        function testVerify() {
+            const code = document.getElementById('verifyCode').value;
+            fetch('http://localhost:8080/verify_registration', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    email: 'test@example.com',
+                    verification_code: code
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('verifyResult').innerHTML = 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            })
+            .catch(error => {
+                document.getElementById('verifyResult').innerHTML = 
+                    '<pre>Error: ' + error + '</pre>';
+            });
+        }
+    </script>
+</body>
+</html>

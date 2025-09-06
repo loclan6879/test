@@ -1,0 +1,4429 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Performance Optimization -->
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- Preconnect for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    
+    <!-- Critical Resources -->
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#556B2F">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
+    <title>EverLiving - Ký ức bất tử</title>
+    <style>
+        /* CSS Variables for Theme */
+        :root {
+            /* Colors */
+            --bg-primary: #F5F5DC;      /* Kem - nền chính */
+            --text-primary: #333333;    /* Xám đậm - chữ chính */
+            --color-primary: #556B2F;   /* Xanh rêu - màu chủ đạo */
+            --color-accent: #8B7355;    /* Nâu cà phê - màu nhấn thay thế đỏ */
+            --color-secondary: #B0C4DE; /* Xanh nhạt - màu phụ */
+            --color-tertiary: #6B8A5B;  /* Xanh oliu - màu phụ trợ */
+            --white-soft: rgba(255, 255, 255, 0.95);
+            --shadow-light: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-medium: 0 4px 12px rgba(0,0,0,0.15);
+            --border-light: 1px solid var(--color-secondary);
+            
+            /* Typography */
+            --font-heading: 'Lora', serif;
+            --font-body: 'Inter', sans-serif;
+            --font-script: 'Dancing Script', cursive;
+            
+            /* Spacing */
+            --radius: 8px;
+            --radius-large: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Cover Photo Section */
+        .cover-section {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .cover-section:hover .cover-upload-overlay {
+            opacity: 1;
+        }
+
+        .cover-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .cover-placeholder {
+            color: white;
+            font-size: 18px;
+            text-align: center;
+            font-family: var(--font-heading);
+            opacity: 0.8;
+        }
+
+        .cover-upload-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 5;
+        }
+
+        .cover-upload-overlay:hover {
+            background: rgba(0,0,0,0.8);
+            transform: scale(1.1);
+        }
+
+        .cover-upload-btn {
+            background: rgba(255,255,255,0.95);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--color-primary);
+        }
+
+        .cover-upload-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        .cover-upload-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        /* Avatar Layout */
+        .avatar-layout {
+            position: relative;
+            width: 100%;
+            padding: 10px;
+            background: white; /* Chuyển thành màu trắng */
+            box-shadow: var(--shadow-light);
+            z-index: 15; /* Đảm bảo lên trên cùng */
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            margin-top: -85px; /* Avatar xuống 5px từ -90px thành -85px */
+        }
+
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 60px;
+            border: 5px solid white;
+            box-shadow: var(--shadow-medium);
+            cursor: pointer;
+            transition: var(--transition);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .avatar:hover .avatar-upload-icon {
+            opacity: 1;
+        }
+
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .avatar-upload-icon {
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: var(--transition);
+            opacity: 0;
+            z-index: 10;
+        }
+
+        .avatar-upload-icon:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        /* User Info Layout */
+        .user-info-layout {
+            text-align: center;
+            margin-top: -10px; /* Di chuyển xuống thêm 15px từ -25px thành -10px */
+            margin-bottom: 15px;
+        }
+
+        .username {
+            font-family: var(--font-heading);
+            font-size: 2.1em;
+            margin-bottom: 0; /* Bỏ margin-bottom vì không có subtitle */
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .header-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dark-mode-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--white-soft);
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            border: var(--border-light);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+        }
+
+        .dark-mode-toggle:hover {
+            background: white;
+            box-shadow: var(--shadow-medium);
+            transform: translateY(-2px);
+        }
+
+        .dark-mode-icon {
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        /* Language Toggle Styles - Similar to Dark Mode */
+        .language-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            border: var(--border-light);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+            margin-right: 10px;
+        }
+
+        .language-toggle:hover {
+            background: white;
+            box-shadow: var(--shadow-medium);
+            transform: translateY(-2px);
+        }
+
+        .language-label {
+            color: var(--color-primary);
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .flag-icon {
+            width: 16px;
+            height: 12px;
+            border-radius: 2px;
+            object-fit: cover;
+            background: #ddd; /* Fallback color if image fails */
+        }
+
+        .flag-icon:error {
+            content: '🏳️';
+            font-size: 12px;
+        }
+
+        .language-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 10px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transform: translateX(0);
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .language-switch.active .language-slider {
+            transform: translateX(26px);
+        }
+
+        /* Smooth animation for language toggle */
+        .language-toggle .toggle-switch {
+            background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+        }
+
+        .language-switch.active .toggle-switch {
+            background: linear-gradient(45deg, var(--color-secondary), var(--color-primary));
+        }
+
+        /* Flag icons styling */
+        .flag-icon {
+            width: 16px;
+            height: 11px;
+            margin-right: 6px;
+            border-radius: 2px;
+            object-fit: cover;
+            vertical-align: middle;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .flag-icon-small {
+            width: 12px;
+            height: 8px;
+            border-radius: 1px;
+            object-fit: cover;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: var(--color-secondary);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.active {
+            background: var(--color-primary);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(26px);
+            background: var(--color-accent);
+            color: white;
+        }
+
+        .logout-btn {
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 14px;
+            font-family: var(--font-body);
+            font-weight: 500;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+        }
+
+        .logout-btn:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* Navigation Tabs */
+        .navigation {
+            background: #f5f5dc; /* Màu beige nhẹ theo yêu cầu */
+            box-shadow: var(--shadow-light);
+            padding: 0; /* Bỏ padding để có width bằng với section-memories */
+            margin: 0 auto; /* Center navigation */
+            max-width: 1160px; /* Giống với content-area max-width */
+            border-bottom: var(--border-light);
+            margin-top: 20px; /* Kéo navigation xuống 20px */
+            position: relative;
+            z-index: 20; /* Đưa navigation lên lớp trên cùng */
+            border-radius: 10px 10px 0 0; /* Bo cong góc trên */
+            height: auto; /* Để chiều cao tự động theo nội dung */
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-tab {
+            flex: 1;
+            max-width: 200px;
+            text-align: center;
+        }
+
+        .nav-tab button {
+            width: 100%;
+            padding: 8px 10px; /* Giảm padding từ 12px xuống 10px */
+            border: none;
+            background: transparent;
+            color: #8B7355; /* Màu nâu tối để hiển thị tốt trên background sáng */
+            font-size: 14px;
+            font-weight: 500;
+            font-family: var(--font-body);
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-tab button:hover {
+            background: rgba(139, 115, 85, 0.1); /* Hover với màu nâu nhạt */
+            border-bottom-color: #8B7355;
+        }
+
+        .nav-tab button.active {
+            background: rgba(139, 115, 85, 0.2); /* Active với màu nâu nhạt hơn */
+            border-bottom-color: #8B7355;
+            color: #8B7355;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            --bg-primary: #2C3E2D;           /* Xanh tối thay vì gradient */
+            --text-primary: #F5F5DC;         /* Kem làm text chính */
+            --color-primary: #98AC7A;        /* Xanh rêu nhạt hơn */
+            --color-accent: #A0826D;         /* Nâu cà phê nhạt thay vì cam */
+            --color-secondary: #6B8E7A;      /* Xanh xám */
+            --color-tertiary: #7A9B6B;       /* Xanh oliu nhạt */
+            --white-soft: rgba(45, 62, 45, 0.95);
+            --shadow-light: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-medium: 0 4px 12px rgba(0,0,0,0.4);
+            --border-light: 1px solid var(--color-secondary);
+        }
+
+        body.dark-mode .header {
+            background: var(--bg-primary);
+            border-bottom-color: var(--color-secondary);
+        }
+
+        body.dark-mode .navigation {
+            background: var(--white-soft);
+            border-bottom-color: var(--color-secondary);
+        }
+
+        body.dark-mode .nav-tab button {
+            color: var(--color-primary);
+        }
+
+        body.dark-mode .nav-tab button:hover {
+            color: var(--color-accent);
+            background: rgba(160, 130, 109, 0.1);
+        }
+
+        body.dark-mode .nav-tab button.active {
+            color: var(--color-accent);
+            border-bottom-color: var(--color-accent);
+            background: rgba(160, 130, 109, 0.1);
+        }
+
+        body.dark-mode .content-area {
+            background: #2a2a3e;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .section-title {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .biography-content {
+            color: #ccc;
+        }
+
+        body.dark-mode .biography-content h3 {
+            color: #8a9cff;
+        }
+
+        body.dark-mode .video-grid {
+            background: #1e1e2e;
+        }
+
+        body.dark-mode .video-item {
+            background: #3a3a4e;
+            border: 1px solid #4a4a5e;
+        }
+
+        body.dark-mode .video-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        body.dark-mode .video-info {
+            background: #3a3a4e;
+        }
+
+        body.dark-mode .video-info h5 {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .video-meta {
+            color: #999;
+        }
+
+        body.dark-mode .video-duration {
+            background: rgba(102, 126, 234, 0.8);
+        }
+
+        body.dark-mode .memory-item {
+            background: #3a3a4e;
+            border: 1px solid #4a4a5e;
+        }
+
+        body.dark-mode .memory-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        body.dark-mode .memory-info {
+            background: #3a3a4e;
+        }
+
+        body.dark-mode .memory-info h5 {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .memory-meta {
+            color: #999;
+        }
+
+        body.dark-mode .memory-duration {
+            background: rgba(102, 126, 234, 0.8);
+        }
+
+        body.dark-mode .memory-card {
+            background: #3a3a4e;
+            border: 1px solid #4a4a5e;
+        }
+
+        body.dark-mode .memory-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        body.dark-mode .memory-info h4 {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .memory-info p {
+            color: #ccc;
+        }
+
+        body.dark-mode .photo-item {
+            background: #3a3a4e;
+            border: 1px solid #4a4a5e;
+        }
+
+        body.dark-mode .photo-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        body.dark-mode .photo-info {
+            background: #3a3a4e;
+        }
+
+        body.dark-mode .photo-info h5 {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .photo-info .photo-meta {
+            color: #999;
+        }
+
+        body.dark-mode .memory-info .photo-meta {
+            color: #999;
+        }
+
+        body.dark-mode .memory-type-badge {
+            background: rgba(102, 126, 234, 0.8);
+        }
+
+        body.dark-mode .music-item {
+            background: #3a3a4e;
+            border: 1px solid #4a4a5e;
+        }
+
+        body.dark-mode .music-item:hover {
+            border-color: #667eea;
+        }
+
+        body.dark-mode .sub-nav button {
+            background: #3a3a4e;
+            color: #ccc;
+            border-color: #4a4a5e;
+        }
+
+        body.dark-mode .sub-nav button.active,
+        body.dark-mode .sub-nav button:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        body.dark-mode .sub-tab.active {
+            background: var(--color-accent);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+            border: 2px solid #8a9cff;
+            font-weight: 600;
+            position: relative;
+        }
+
+        body.dark-mode .sub-tab.active::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #667eea, #8a9cff);
+            border-radius: calc(var(--radius) + 2px);
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        body.dark-mode .upload-area {
+            background: #3a3a4e;
+            border-color: #4a4a5e;
+            color: #ccc;
+        }
+
+        body.dark-mode .upload-area:hover {
+            border-color: #667eea;
+        }
+
+        body.dark-mode .progress-bar {
+            background: #1e1e2e;
+        }
+
+        body.dark-mode .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        body.dark-mode .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        body.dark-mode .btn-secondary {
+            background: #3a3a4e;
+            color: #ccc;
+            border-color: #4a4a5e;
+        }
+
+        body.dark-mode .btn-secondary:hover {
+            background: #4a4a5e;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-tab {
+            flex: 1;
+            max-width: 200px;
+            text-align: center;
+        }
+
+        .nav-tab button {
+            width: 100%;
+            padding: 20px 30px;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab button:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .nav-tab button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        /* Content Area */
+        .content-area {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            margin-top: 10px; /* Tạo khoảng cách phù hợp với navigation */
+        }
+
+        .content-section {
+            display: none;
+            background: white;
+            border-radius: var(--radius-large);
+            padding: 30px;
+            box-shadow: var(--shadow-light);
+            margin-bottom: 10px; /* Giảm từ 30px xuống 10px để viền dưới lên trên 20px */
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        #section-memories {
+            padding: 10px; /* Set padding = 10px cho section-memories */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2em;
+            color: var(--color-primary);
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 2px solid var(--color-accent);
+            padding-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* Tiểu sử styling */
+        .biography-content {
+            font-family: var(--font-body);
+            line-height: 1.8;
+            color: var(--text-primary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .biography-content h3 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            margin: 30px 0 15px 0;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .biography-content p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Sub-navigation styling */
+        .sub-nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: var(--white-soft);
+            border-radius: var(--radius-large);
+            padding: 8px;
+            box-shadow: var(--shadow-light);
+            overflow-x: auto;
+            border: var(--border-light);
+        }
+
+        .sub-tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: var(--color-primary);
+            font-size: 14px;
+            font-weight: 500;
+            font-family: var(--font-body);
+            cursor: pointer;
+            border-radius: var(--radius);
+            transition: var(--transition);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            position: relative;
+        }
+
+        .sub-tab:hover {
+            background: rgba(139, 115, 85, 0.1);
+            color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .sub-tab.active {
+            background: var(--color-primary);
+            color: white;
+            box-shadow: var(--shadow-medium);
+            transform: translateY(-2px);
+            border: 2px solid var(--color-accent);
+            font-weight: 600;
+            position: relative;
+        }
+
+        .sub-tab.active::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
+            border-radius: calc(var(--radius) + 2px);
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        .sub-tab-icon {
+            font-size: 16px;
+        }
+
+        .sub-content {
+            display: none;
+            animation: fadeInUp 0.5s ease-in-out;
+            max-height: 70vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-primary) var(--color-secondary);
+        }
+
+        .sub-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sub-content::-webkit-scrollbar-track {
+            background: var(--color-secondary);
+            border-radius: 4px;
+        }
+
+        .sub-content::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 4px;
+        }
+
+        .sub-content::-webkit-scrollbar-thumb:hover {
+            background: var(--color-accent);
+        }
+
+        .sub-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        /* Thư viện ký ức styling - Pinterest Style Masonry */
+        .memory-grid {
+            column-count: 4;
+            column-gap: 15px;
+            padding: 20px 0;
+        }
+
+        .memory-card {
+            background: var(--white-soft);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+            transition: var(--transition);
+            break-inside: avoid;
+            margin-bottom: 20px;
+            cursor: pointer;
+            height: fit-content;
+        }
+
+        .memory-card {
+            border: var(--border-light);
+            width: 100%;
+            display: inline-block;
+        }
+
+        .memory-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .memory-card:hover .memory-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+
+        .memory-image {
+            width: 100%;
+            background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
+            display: block;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .memory-image img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            border-radius: 10px;
+            display: block;
+        }
+
+        .memory-card:hover .memory-image img {
+            transform: scale(1.05);
+        }
+
+        .memory-info {
+            padding: 8px 12px;
+            background: white;
+        }
+
+        .memory-info h4 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            margin-bottom: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .memory-info p {
+            font-family: var(--font-body);
+            color: var(--text-primary);
+            font-size: 0.85em;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .memory-info .photo-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+            font-size: 0.75em;
+            color: var(--color-primary);
+        }
+
+        .memory-type-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: var(--color-accent);
+            color: white;
+            padding: 4px 8px;
+            border-radius: var(--radius);
+            font-size: 0.75em;
+            font-family: var(--font-body);
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+            box-shadow: var(--shadow-light);
+            display: none; /* Ẩn badges */
+        }
+
+        /* Ẩn các loading indicators không mong muốn */
+        .loading-indicator,
+        .spinner,
+        .circular-progress,
+        [class*="loading"],
+        [class*="spinner"] {
+            display: none !important;
+        }
+
+        /* Photo gallery specific styling - Pinterest Style */
+        .photo-gallery {
+            column-count: 4;
+            column-gap: 15px;
+            padding: 20px 0;
+        }
+
+        /* Video gallery specific styling - Pinterest Style */
+        .video-grid {
+            column-count: 4;
+            column-gap: 15px;
+            padding: 20px 0;
+        }
+
+        /* Memories gallery specific styling - Pinterest Style (giống video-grid) */
+        .memories-grid {
+            column-count: 4;
+            column-gap: 15px;
+            padding: 20px 0;
+            width: 100%;
+            display: block;
+        }
+
+        .photo-item {
+            background: var(--white-soft);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+            transition: var(--transition);
+            break-inside: avoid;
+            margin-bottom: 15px;
+            cursor: pointer;
+            position: relative;
+            border: var(--border-light);
+        }
+
+        .video-item {
+            background: var(--white-soft);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+            transition: var(--transition);
+            break-inside: avoid;
+            margin-bottom: 15px;
+            cursor: pointer;
+            position: relative;
+            border: var(--border-light);
+        }
+
+        .memory-item {
+            background: var(--white-soft);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+            transition: var(--transition);
+            break-inside: avoid;
+            margin-bottom: 15px;
+            cursor: pointer;
+            position: relative;
+            border: var(--border-light);
+            width: 100%;
+            display: inline-block;
+        }
+
+        .photo-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .video-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .memory-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .memory-thumbnail {
+            width: 100%;
+            position: relative;
+            background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
+            display: block;
+            overflow: hidden;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .memory-thumbnail img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            display: block;
+        }
+
+        .memory-item:hover .memory-thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .memory-info {
+            padding: 12px;
+            background: white;
+        }
+
+        .memory-info h5 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            margin-bottom: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .memory-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75em;
+            color: var(--color-primary);
+        }
+
+        .memory-duration {
+            background: var(--color-accent);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: 500;
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            position: relative;
+            background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
+            display: block;
+            overflow: hidden;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            display: block;
+        }
+
+        .video-item:hover .video-thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .video-play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.7);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            transition: var(--transition);
+            opacity: 0.8;
+        }
+
+        .video-item:hover .video-play-overlay {
+            background: rgba(0,0,0,0.9);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .video-info {
+            padding: 12px;
+            background: white;
+        }
+
+        .video-info h5 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            margin-bottom: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75em;
+            color: var(--color-primary);
+        }
+
+        .video-duration {
+            background: var(--color-accent);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: 500;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            min-height: 200px;
+            background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            position: relative;
+        }
+
+        .photo-placeholder img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-item:hover .photo-placeholder img {
+            transform: scale(1.03);
+        }
+
+        .photo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(transparent 50%, rgba(0,0,0,0.5));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: flex-end;
+            padding: 15px;
+        }
+
+        .photo-item:hover .photo-overlay {
+            opacity: 1;
+        }
+
+        .photo-info {
+            padding: 8px 12px;
+            background: white;
+        }
+
+        .photo-info h5 {
+            font-family: var(--font-heading);
+            margin: 0 0 5px 0;
+            font-size: 0.9em;
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .photo-info .photo-meta {
+            font-size: 0.75em;
+            color: var(--color-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0;
+            font-family: var(--font-body);
+        }
+
+        /* Performance optimized image loading */
+        .memory-image, .photo-placeholder {
+            position: relative;
+            will-change: transform;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+
+        .memory-image img, .photo-placeholder img {
+            opacity: 0;
+            transition: opacity 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .memory-image img.loaded, .photo-placeholder img.loaded {
+            opacity: 1;
+        }
+
+        /* Lazy loading placeholder with shimmer effect */
+        .lazy-placeholder {
+            background: linear-gradient(90deg, var(--bg-secondary) 25%, transparent 37%, var(--bg-secondary) 63%);
+            background-size: 400% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 100% 50%; }
+            100% { background-position: -100% 50%; }
+        }
+
+        /* Blur placeholder for progressive loading */
+        .blur-placeholder {
+            filter: blur(5px);
+            transform: scale(1.1);
+            transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .blur-placeholder.loaded {
+            filter: blur(0);
+            transform: scale(1);
+        }
+
+        /* Performance optimized hover effects */
+        .memory-card, .photo-item {
+            will-change: transform;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+
+        .memory-card:hover, .photo-item:hover {
+            transform: translateY(-3px) translateZ(0);
+        }
+
+        /* Loading skeleton for better UX */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 37%, #f0f0f0 63%);
+            background-size: 400% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+            border-radius: 8px;
+        }
+
+        /* Intersection Observer optimization */
+        .lazy-image {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .lazy-image.loaded {
+            opacity: 1;
+        }
+
+        /* Virtual scrolling container */
+        .virtual-scroll {
+            overflow-y: auto;
+            height: 70vh;
+            position: relative;
+        }
+
+
+
+        /* ==========================================
+           CORE WEB VITALS OPTIMIZATION
+        ========================================== */
+
+        /* Reduce Cumulative Layout Shift (CLS) */
+        img, video {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .memory-card, .photo-item {
+            contain: layout style paint;
+        }
+
+        /* Improve Largest Contentful Paint (LCP) */
+        .memory-image img[data-critical="true"], 
+        .photo-placeholder img[data-critical="true"] {
+            z-index: 10;
+        }
+
+        /* Reduce First Input Delay (FID) */
+        .clickable-image, .clickable-photo, .clickable-video {
+            touch-action: manipulation;
+        }
+
+        /* GPU acceleration for smooth animations */
+        .memory-card, .photo-item, .nav-tab button, .sub-tab {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            will-change: transform;
+        }
+
+        /* Reduce paint complexity */
+        .masonry-grid {
+            transform: translateZ(0);
+            position: relative;
+        }
+
+        .masonry-item {
+            position: absolute;
+            transform: translateZ(0);
+        }
+
+        /* Optimize scrolling performance */
+        .content-area {
+            overflow-anchor: auto;
+        }
+
+        /* Image optimization for different densities */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .memory-image img, .photo-placeholder img {
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+            }
+        }
+
+        /* Optimize animation performance */
+        @keyframes optimizedShimmer {
+            0% { 
+                background-position: 100% 50%;
+                transform: translateX(-100%);
+            }
+            100% { 
+                background-position: -100% 50%;
+                transform: translateX(100%);
+            }
+        }
+
+        .lazy-placeholder {
+            animation: optimizedShimmer 1.5s ease-in-out infinite;
+            transform: translateZ(0);
+        }
+
+        /* Memory optimization */
+        .hidden {
+            visibility: hidden;
+            position: absolute;
+            left: -9999px;
+        }
+
+        /* Reduce repaint/reflow */
+        .memory-info, .photo-info {
+            contain: layout style;
+        }
+
+        /* ==========================================
+           RESPONSIVE DESIGN ENHANCEMENTS
+        ========================================== */
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .cover-section {
+                height: 200px;
+            }
+
+            .cover-upload-overlay {
+                top: 10px;
+                left: 10px;
+                width: 35px;
+                height: 35px;
+            }
+
+            .cover-upload-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+
+            .header-controls {
+                flex-direction: column;
+                gap: 10px;
+                top: 10px;
+                right: 10px;
+            }
+
+            .avatar-container {
+                width: 100px;
+                height: 100px;
+                margin-top: -75px; /* Avatar xuống 5px cho mobile */
+            }
+            
+            .avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 36px;
+            }
+
+            .avatar-upload-icon {
+                width: 20px;
+                height: 20px;
+                font-size: 10px;
+                bottom: 6px;
+                right: 6px;
+            }
+
+            .avatar:hover .avatar-upload-icon {
+                opacity: 1;
+            }
+
+            .username {
+                font-size: 1.8em;
+            }
+
+            .navigation {
+                margin: 0 15px; /* Giữ margin cho mobile */
+                padding: 0; /* Bỏ padding cho mobile để có width giống section-memories */
+            }
+
+            .nav-tabs {
+                flex-direction: row; /* Giữ nằm ngang cho mobile */
+                gap: 0;
+            }
+
+            .nav-tab {
+                flex: 1; /* Chia đều không gian */
+            }
+
+            .nav-tab button {
+                padding: 8px 15px; /* Giảm padding mobile từ 10px xuống 8px */
+                font-size: 13px;
+            }
+            
+            .content-area {
+                margin: 10px 15px; /* Thêm margin-top cho mobile để không chèn với navigation */
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 1.6em;
+            }
+            
+            .memory-grid {
+                column-count: 3;
+                column-gap: 10px;
+            }
+            
+            .video-grid {
+                column-count: 3;
+                column-gap: 10px;
+            }
+            
+            .memories-grid {
+                column-count: 3;
+                column-gap: 10px;
+            }
+            
+            .photo-gallery {
+                column-count: 3;
+                column-gap: 10px;
+            }
+            
+            .nav-tab button {
+                padding: 15px 20px;
+                font-size: 14px;
+            }
+            
+            .nav-icon {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                height: 200px;
+            }
+            
+            .header-controls {
+                position: static;
+                justify-content: center;
+                margin-bottom: 20px;
+                gap: 8px;
+            }
+            
+            .language-toggle, .dark-mode-toggle {
+                padding: 6px 8px;
+                margin-right: 0;
+            }
+            
+            .language-label {
+                font-size: 10px;
+            }
+            
+            .flag-icon {
+                width: 14px;
+                height: 9px;
+                margin-right: 4px;
+            }
+            
+            .flag-icon-small {
+                width: 10px;
+                height: 7px;
+            }
+            
+            .toggle-switch {
+                width: 40px;
+                height: 20px;
+            }
+            
+            .language-slider {
+                width: 16px;
+                height: 16px;
+                top: 2px;
+                left: 2px;
+            }
+            
+            .language-switch.active .language-slider {
+                transform: translateX(20px);
+            }
+            
+            .logout-btn {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+            
+            .user-info h1 {
+                font-size: 1.5em;
+            }
+            
+            .avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 28px;
+            }
+            
+            .memory-grid {
+                column-count: 3;
+                column-gap: 8px;
+                padding: 10px 0;
+            }
+            
+            .video-grid {
+                column-count: 3;
+                column-gap: 8px;
+                padding: 10px 0;
+            }
+            
+            .memories-grid {
+                column-count: 3;
+                column-gap: 8px;
+                padding: 10px 0;
+            }
+            
+            .photo-gallery {
+                column-count: 2;
+                column-gap: 8px;
+                padding: 10px 0;
+            }
+
+/* Responsive cho màn hình rất nhỏ */
+@media (max-width: 480px) {
+    .memory-grid {
+        column-count: 3;
+        column-gap: 10px;
+    }
+    
+    .video-grid {
+        column-count: 3;
+        column-gap: 10px;
+    }
+    
+    .memories-grid {
+        column-count: 3;
+        column-gap: 10px;
+    }
+    
+    .photo-gallery {
+        column-count: 2;
+        column-gap: 10px;
+    }
+    
+    .video-gallery {
+        column-count: 2;
+        column-gap: 10px;
+    }
+
+    .memory-card {
+        break-inside: avoid;
+        margin-bottom: 10px;
+    }
+
+    .memory-image {
+        height: 200px;
+    }
+    
+    /* Upload container responsive */
+    .upload-container {
+        width: 95% !important;
+        height: 120px !important;
+        margin: 15px auto !important;
+    }
+    
+    .upload-content {
+        padding: 10px !important;
+    }
+    
+    .upload-content i {
+        font-size: 2.2em !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .upload-content p:first-of-type {
+        font-size: 1em !important;
+    }
+    
+    .upload-content p:nth-of-type(2) {
+        font-size: 0.9em !important;
+    }
+    
+    .upload-content p:last-of-type {
+        font-size: 0.75em !important;
+    }
+}
+
+        /* Responsive cho màn hình rất nhỏ - additional styles */
+        @media (max-width: 480px) {
+            .nav-tabs {
+                padding: 5px;
+            }
+            
+            .nav-tab {
+                flex: 1;
+                min-width: 80px;
+            }
+            
+            .nav-tab button {
+                padding: 8px 4px;
+                font-size: 0.8em;
+            }
+            
+            .sub-nav {
+                gap: 5px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 5px;
+            }
+            
+            .sub-tab {
+                min-width: auto;
+                font-size: 0.7em;
+                padding: 6px 4px;
+                text-align: center;
+                flex: 0 1 auto;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                gap: 2px;
+            }
+        }
+
+        /* Responsive cho màn hình rất nhỏ */
+        @media (max-width: 360px) {
+            .sub-tab {
+                padding: 6px 3px;
+                font-size: 0.65em;
+            }
+            
+            .sub-tab-icon {
+                font-size: 12px;
+            }
+        }
+
+        .photo-info h5 {
+            margin: 0 0 5px 0;
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        .photo-date {
+            color: #888;
+            font-size: 0.8em;
+        }
+
+        /* Video gallery specific styling - Pinterest Style Masonry */
+        .video-gallery {
+            column-count: 4;
+            column-gap: 15px;
+            padding: 20px 0;
+        }
+
+        .video-item {
+            background: #f8f9fa;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            width: 100%;
+            break-inside: avoid;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .video-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .video-placeholder {
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 64px;
+            position: relative;
+        }
+
+        /* Video Modal Navigation Styles */
+        #videoModal {
+            backdrop-filter: blur(5px);
+        }
+
+        #videoModal .nav-btn {
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        #videoModal .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2) !important;
+            transform: scale(1.1);
+        }
+
+        #videoModal .nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        #videoModal .close-btn {
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        #videoModal .close-btn:hover {
+            background: rgba(255, 0, 0, 0.7);
+            border-radius: 50%;
+            transform: scale(1.1);
+        }
+
+        #videoModal .video-title {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        #videoModal .video-counter {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
+        /* Mobile responsive navigation */
+        @media (max-width: 768px) {
+            #videoModal .nav-btn {
+                position: fixed !important;
+                top: 50% !important;
+                transform: translateY(-50%) !important;
+                width: 50px !important;
+                height: 50px !important;
+                font-size: 24px !important;
+            }
+
+            #videoModal .nav-prev {
+                left: 10px !important;
+            }
+
+            #videoModal .nav-next {
+                right: 10px !important;
+            }
+
+            #videoModal .close-btn {
+                position: fixed !important;
+                top: 10px !important;
+                right: 10px !important;
+                font-size: 40px !important;
+                z-index: 10002 !important;
+            }
+
+            #videoModal .video-container {
+                max-width: 95% !important;
+            }
+        }
+
+        .memory-thumbnail {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .memory-thumbnail img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .memory-image {
+            position: relative;
+        }
+
+        .clickable-video {
+            position: relative !important;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.7);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .play-overlay:hover {
+            background: rgba(0,0,0,0.9);
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .play-overlay i {
+            margin-left: 2px; /* Slight offset for play icon visual balance */
+        }
+
+        /* Created memories styling */
+        .created-memories {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .created-memory-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: block !important;
+        }
+
+        .created-memory-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .memory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .memory-title {
+            font-size: 1.2em;
+            color: #333;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .memory-category {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .memory-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .memory-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .memory-date {
+            font-weight: 500;
+        }
+
+        .memory-files {
+            display: flex;
+            gap: 5px;
+        }
+
+        .file-count {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+
+        /* Tạo khoảnh khắc styling */
+        .create-moment {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        .create-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .create-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(0,0,0,0.1);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                height: 250px;
+            }
+
+            .user-info h1 {
+                font-size: 1.8em;
+            }
+
+            .navigation {
+                padding: 0; /* Bỏ padding cho tablet để có width giống section-memories */
+                margin: 10px auto; /* Đồng bộ với content-area margin */
+                max-width: 1180px; /* Tăng lại max-width cho tablet */
+            }
+
+            .nav-tabs {
+                flex-direction: row;
+                justify-content: space-around;
+                flex-wrap: nowrap;
+                padding: 10px 5px;
+            }
+
+            .nav-tab {
+                flex: 1;
+                max-width: 120px;
+            }
+
+            .nav-tab button {
+                padding: 12px 8px;
+                font-size: 0.9em;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .sub-nav {
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 10px;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                grid-gap: 8px;
+            }
+
+            .sub-tab {
+                flex: 1;
+                min-width: calc(25% - 6px);
+                text-align: center;
+                padding: 10px 5px;
+                font-size: 0.9em;
+            }
+
+            .content-area {
+                margin: 10px;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+
+            .photo-gallery {
+                column-count: 3;
+                column-gap: 10px;
+            }
+
+            .video-gallery {
+                column-count: 3;
+                column-gap: 10px;
+            }
+
+            .created-memories {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+            }
+
+            .memory-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cover Photo Section (Header) -->
+    <div class="cover-section">
+        <img id="cover-image" class="cover-image" alt="Cover Photo">
+        <div id="cover-placeholder" class="cover-placeholder">
+            📸 Ảnh bìa của bạn - Click vào icon máy ảnh để thay đổi
+        </div>
+        <div class="cover-upload-overlay" onclick="uploadCover()">
+            <button class="cover-upload-btn">📷</button>
+        </div>
+        
+        <!-- Header Controls -->
+        <div class="header-controls">
+            <div class="toggle-group">
+                <!-- Language Toggle -->
+                <div class="language-toggle" onclick="event.stopPropagation(); toggleLanguage()">
+                    <img id="flagIcon" src="/static/assets/flag/vn.png" alt="VN" class="flag-icon">
+                    <span class="language-label" id="languageLabel">VI</span>
+                </div>
+                
+                <!-- Dark Mode Toggle -->
+                <div class="dark-mode-toggle" onclick="event.stopPropagation(); toggleDarkMode()">
+                    <span id="darkModeIcon" class="dark-mode-icon">🌙</span>
+                </div>
+            </div>
+            
+            <button class="logout-btn" onclick="event.stopPropagation(); logout()">
+                <span>🚪 Đăng xuất</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Avatar Layout -->
+    <div class="avatar-layout">
+        <div class="avatar-container">
+            <div class="avatar" onclick="uploadAvatar()">
+                <img id="avatar-image" class="avatar-image" alt="Avatar">
+                <span id="avatar-initial">{{ username[0].upper() if username else 'U' }}</span>
+                <div class="avatar-upload-icon">📷</div>
+            </div>
+        </div>
+
+        <!-- User Info Layout -->
+        <div class="user-info-layout">
+            <h1 class="username" id="userName">{{ username or 'user1' }}</h1>
+        </div>
+    </div>
+
+    <!-- Navigation Layout -->
+    <div class="navigation">
+        <nav class="nav-tabs">
+            <div class="nav-tab">
+                <button onclick="showSection('biography')" id="tab-biography" class="active">
+                    <span class="nav-icon">📖</span>
+                    <span data-translate="biography">Tiểu sử</span>
+                </button>
+            </div>
+            <div class="nav-tab">
+                <button onclick="showSection('memories')" id="tab-memories">
+                    <span class="nav-icon">🏛️</span>
+                    <span data-translate="memory_library">Thư viện ký ức</span>
+                </button>
+            </div>
+            <div class="nav-tab">
+                <button onclick="showSection('create')" id="tab-create">
+                    <span class="nav-icon">✨</span>
+                    <span data-translate="create_moment">Tạo khoảnh khắc</span>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Content Area -->
+    <main class="content-area">
+        <!-- Tiểu sử Section -->
+        <section id="section-biography" class="content-section active">
+            <div class="biography-content">
+                <h3>🌟 Giới thiệu</h3>
+                <p>Đây là nơi tôi chia sẻ câu chuyện cuộc đời mình, những kỷ niệm đáng nhớ và những trải nghiệm quý giá. Mỗi khoảnh khắc đều có ý nghĩa riêng và đóng góp vào hành trình của tôi.</p>
+                
+                <h3>🎯 Sứ mệnh</h3>
+                <p>EverTrace giúp tôi lưu giữ và chia sẻ những kỷ niệm đẹp nhất, tạo ra một di sản kỹ thuật số cho thế hệ tương lai. Mỗi video, hình ảnh và câu chuyện đều là một phần của cuộc đời tôi.</p>
+                
+                <h3>💫 Giá trị sống</h3>
+                <p>Tôi tin rằng mỗi khoảnh khắc đều đáng được trân trọng. Những kỷ niệm không chỉ là quá khứ mà còn là nguồn cảm hứng cho tương lai. Hãy cùng tôi khám phá và tạo ra những kỷ niệm mới.</p>
+            </div>
+        </section>
+
+        <!-- Thư viện ký ức Section -->
+        <section id="section-memories" class="content-section">
+            
+            
+            <!-- Sub-navigation -->
+            <div class="sub-nav">
+                <button onclick="showSubSection('memories', 'memories-all')" class="sub-tab active" id="sub-tab-all">
+                    <span class="sub-tab-icon">📚</span>
+                    <span data-translate="all">Tất cả</span>
+                </button>
+                <button onclick="showSubSection('memories', 'memories-photos')" class="sub-tab" id="sub-tab-photos">
+                    <span class="sub-tab-icon">📸</span>
+                    <span data-translate="photos">Hình ảnh</span>
+                </button>
+                <button onclick="showSubSection('memories', 'memories-videos')" class="sub-tab" id="sub-tab-videos">
+                    <span class="sub-tab-icon">🎬</span>
+                    <span data-translate="videos">Video</span>
+                </button>
+                <button onclick="showSubSection('memories', 'memories-memories')" class="sub-tab" id="sub-tab-memories">
+                    <span class="sub-tab-icon">✨</span>
+                    <span data-translate="created_moments">Khoảnh khắc đã tạo</span>
+                </button>
+            </div>
+
+            <!-- Sub-content: Tất cả -->
+            <div id="memories-all" class="sub-content active">
+                <div class="memory-grid" id="allMemoriesGrid">
+                    <div style="text-align: center; color: #888; padding: 40px; break-inside: avoid; margin-bottom: 20px;">
+                        <p>📱 Đang tải dữ liệu...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-content: Hình ảnh -->
+            <div id="memories-photos" class="sub-content">
+                <div class="photo-gallery" id="photosGallery">
+                    <div style="grid-column: 1 / -1; text-align: center; color: #888; padding: 40px;">
+                        <p>📸 Đang tải hình ảnh...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-content: Video -->
+            <div id="memories-videos" class="sub-content">
+                <div class="video-grid" id="videosGrid">
+                    <div style="text-align: center; color: #888; padding: 40px; break-inside: avoid; margin-bottom: 20px;">
+                        <p>🎬 Đang tải video...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-content: Khoảnh khắc đã tạo -->
+            <div id="memories-memories" class="sub-content">
+                <div class="memories-grid" id="memoriesGrid">
+                    <div style="text-align: center; color: #888; padding: 40px; break-inside: avoid; margin-bottom: 20px;">
+                        <p>✨ Đang tải khoảnh khắc...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Upload Area -->
+            <div class="upload-container" style="width: 1160px; height: 150px; margin: 20px auto; position: relative; background: #f5f5dc; border: 2px dashed #8B7355; border-radius: 15px; box-shadow: 0 2px 8px rgba(139, 115, 85, 0.15); display: block; visibility: visible;">
+                <div class="upload-area" style="width: 100%; height: 100%; border-radius: 13px; background: rgba(255, 255, 255, 0.6); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; padding: 15px;" onclick="triggerFileUpload()" onmouseover="this.style.background='rgba(139, 115, 85, 0.1)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.6)'">
+                    <div class="upload-content" style="text-align: center; max-width: 100%;">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 2.8em; color: #8B7355; margin-bottom: 12px; display: block;"></i>
+                        <p style="margin: 0; color: #8B7355; font-size: 1.2em; font-weight: 600; line-height: 1.3;">📁 Tải lên Hình ảnh + Video</p>
+                        <p style="margin: 8px 0 0 0; color: #A0956B; font-size: 1em; line-height: 1.4;">Kéo thả file hoặc nhấn để chọn</p>
+                        <p style="margin: 6px 0 0 0; color: #A0956B; font-size: 0.85em; line-height: 1.3;">Hỗ trợ: JPG, PNG, GIF, MP4, AVI, MOV</p>
+                    </div>
+                </div>
+            </div>
+            <input type="file" id="memoryFileInput" multiple accept="image/*,video/*" style="display: none;" onchange="handleFileUpload(event)">
+            <div id="uploadProgress" class="upload-progress" style="display: none; margin-top: 12px; padding: 0 15px;">
+                <div id="progressText" style="font-size: 0.85em; color: #666; margin-bottom: 6px; text-align: center;">0%</div>
+                <div class="progress-bar" style="width: 100%; height: 8px; background: rgba(139, 115, 85, 0.2); border-radius: 4px; overflow: hidden;">
+                    <div class="progress-fill" id="progressFill" style="height: 100%; background: linear-gradient(90deg, #8B7355, #A0956B); width: 0%; transition: width 0.3s ease; border-radius: 4px;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tạo khoảnh khắc Section -->
+        <section id="section-create" class="content-section">
+            <div class="create-moment">
+                <form id="createMomentForm">
+                    <div class="form-group">
+                        <label for="momentTitle">📝 Tiêu đề khoảnh khắc</label>
+                        <input type="text" id="momentTitle" placeholder="Nhập tiêu đề cho khoảnh khắc của bạn..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="momentDescription">📖 Mô tả chi tiết</label>
+                        <textarea id="momentDescription" placeholder="Hãy kể câu chuyện về khoảnh khắc này..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="momentCategory">🏷️ Danh mục</label>
+                        <select id="momentCategory" required>
+                            <option value="">Chọn danh mục...</option>
+                            <option value="family">👨‍👩‍👧‍👦 Gia đình</option>
+                            <option value="friends">👫 Bạn bè</option>
+                            <option value="travel">✈️ Du lịch</option>
+                            <option value="achievement">🏆 Thành tựu</option>
+                            <option value="milestone">🎯 Cột mốc</option>
+                            <option value="other">🌟 Khác</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="momentDate">📅 Ngày tháng</label>
+                        <input type="date" id="momentDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>🖼️ Tải lên hình ảnh/video</label>
+                        <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                            <input type="file" id="fileInput" accept="image/*,video/*" multiple>
+                            <div>
+                                📸 Click để chọn files<br>
+                                <small>Hỗ trợ hình ảnh và video</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="create-btn">
+                        ✨ Tạo khoảnh khắc kỷ niệm
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p data-translate="footer_text">&copy; 2025 EverTrace - Lưu giữ kỷ niệm, tạo nên di sản</p>
+    </footer>
+
+    <script>
+        // ==========================================
+        // PERFORMANCE OPTIMIZATION SYSTEM
+        // ==========================================
+
+        // Intersection Observer for Lazy Loading
+        let imageObserver;
+        let allMemoriesData = [];
+        let allImagesData = [];
+
+        // Initialize performance optimizations
+        function initPerformanceOptimizations() {
+            // Lazy Loading Observer
+            if ('IntersectionObserver' in window) {
+                imageObserver = new IntersectionObserver(lazyImageCallback, {
+                    rootMargin: '50px 0px',
+                    threshold: 0.01
+                });
+            }
+
+            // Debounced scroll for better performance
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(handleScroll, 100);
+            });
+
+            // Preload critical images
+            preloadCriticalImages();
+        }
+
+        // Lazy loading callback
+        function lazyImageCallback(entries, observer) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    loadImage(img);
+                    observer.unobserve(img);
+                }
+            });
+        }
+
+        // Load image with progressive enhancement
+        function loadImage(img) {
+            const src = img.dataset.src || img.src;
+            if (!src) return;
+
+            // Create new image for preloading
+            const imageLoader = new Image();
+            
+            imageLoader.onload = function() {
+                // Add fade-in effect
+                img.src = src;
+                img.classList.add('loaded');
+                
+                // Remove placeholder
+                const placeholder = img.parentElement.querySelector('.lazy-placeholder');
+                if (placeholder) {
+                    placeholder.style.opacity = '0';
+                    setTimeout(() => placeholder.remove(), 300);
+                }
+            };
+
+            imageLoader.onerror = function() {
+                // Handle error with fallback
+                img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIG5vdCBmb3VuZDwvdGV4dD48L3N2Zz4=';
+                img.classList.add('loaded');
+            };
+
+            imageLoader.src = src;
+        }
+
+        // Preload critical images (first 3-5 images)
+        function preloadCriticalImages() {
+            const criticalImages = document.querySelectorAll('img[data-critical="true"]');
+            criticalImages.forEach(img => {
+                loadImage(img);
+            });
+        }
+
+        // Handle scroll for infinite loading
+        function handleScroll() {
+            const scrollPosition = window.innerHeight + window.scrollY;
+            const documentHeight = document.documentElement.offsetHeight;
+            
+            // Load more when 80% scrolled
+            if (scrollPosition >= documentHeight * 0.8) {
+                loadMoreItems();
+            }
+        }
+
+        // Load more items (pagination)
+        function loadMoreItems() {
+            const activeSection = document.querySelector('.sub-content.active');
+            if (!activeSection) return;
+
+            if (activeSection.id === 'allMemoriesGrid') {
+                loadMoreMemories();
+            } else if (activeSection.id === 'photosGallery') {
+                loadMoreImages();
+            }
+        }
+
+        // Enhanced masonry layout optimization
+        function optimizeMasonryLayout(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            // Use requestAnimationFrame for smooth animations
+            requestAnimationFrame(() => {
+                const items = container.children;
+                const columns = getColumnCount();
+                const columnHeights = new Array(columns).fill(0);
+                const gap = 20;
+
+                Array.from(items).forEach((item, index) => {
+                    const shortestColumnIndex = columnHeights.indexOf(Math.min(...columnHeights));
+                    const column = shortestColumnIndex;
+                    const row = Math.floor(index / columns);
+
+                    item.style.position = 'absolute';
+                    item.style.left = `${column * (100 / columns)}%`;
+                    item.style.top = `${columnHeights[shortestColumnIndex]}px`;
+                    item.style.width = `calc(${100 / columns}% - ${gap * (columns - 1) / columns}px)`;
+
+                    columnHeights[shortestColumnIndex] += item.offsetHeight + gap;
+                });
+
+                // Set container height
+                container.style.height = `${Math.max(...columnHeights)}px`;
+                container.style.position = 'relative';
+            });
+        }
+
+        // Get optimal column count based on screen size
+        function getColumnCount() {
+            const width = window.innerWidth;
+            if (width >= 1200) return 4;
+            if (width >= 768) return 3;
+            if (width >= 480) return 2;
+            return 2; // Minimum 2 columns for mobile, not 1
+        }
+
+        // Image format optimization (WebP support)
+        function getOptimizedImageSrc(originalSrc) {
+            // Check WebP support
+            const canvas = document.createElement('canvas');
+            const webpSupported = canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+            
+            if (webpSupported && originalSrc.includes('.jpg') || originalSrc.includes('.png')) {
+                // Return WebP version if available
+                return originalSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+            }
+            
+            return originalSrc;
+        }
+
+        // ==========================================
+        // ORIGINAL FUNCTIONALITY
+        // ==========================================
+
+        // Tab switching functionality
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab button');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(`section-${sectionName}`).classList.add('active');
+            
+            // Activate selected tab
+            document.getElementById(`tab-${sectionName}`).classList.add('active');
+
+            // Update URL without page reload (SPA behavior)
+            history.pushState({section: sectionName}, '', `#${sectionName}`);
+
+            // Auto-load default content for memories section
+            if (sectionName === 'memories') {
+                // Load the default "Tất cả" subtab content
+                setTimeout(() => {
+                    loadAllMemories();
+                }, 100);
+            }
+        }
+
+        // Sub-tab switching functionality
+        function showSubSection(parentSection, subSection) {
+            // Hide all sub-contents in parent section
+            const subContents = document.querySelectorAll(`#section-${parentSection} .sub-content`);
+            subContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all sub-tabs
+            const subTabs = document.querySelectorAll(`#section-${parentSection} .sub-tab`);
+            subTabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected sub-content
+            document.getElementById(subSection).classList.add('active');
+            
+            // Activate selected sub-tab based on subSection
+            let activeTabId = '';
+            switch(subSection) {
+                case 'memories-all':
+                    activeTabId = 'sub-tab-all';
+                    break;
+                case 'memories-photos':
+                    activeTabId = 'sub-tab-photos';
+                    break;
+                case 'memories-videos':
+                    activeTabId = 'sub-tab-videos';
+                    break;
+                case 'memories-memories':
+                    activeTabId = 'sub-tab-memories';
+                    break;
+            }
+            
+            if (activeTabId) {
+                const activeTab = document.getElementById(activeTabId);
+                if (activeTab) {
+                    activeTab.classList.add('active');
+                }
+            }
+
+            // Update URL
+            history.pushState({
+                section: parentSection, 
+                subsection: subSection
+            }, '', `#${parentSection}/${subSection}`);
+
+            // Load content based on sub-section
+            if (parentSection === 'memories') {
+                switch(subSection) {
+                    case 'memories-all':
+                        loadAllMemories();
+                        break;
+                    case 'memories-photos':
+                        loadImages();
+                        break;
+                    case 'memories-videos':
+                        loadVideos();
+                        break;
+                    case 'memories-memories':
+                        loadUserCreatedMemories();
+                        break;
+                }
+            }
+        }
+
+        // Load all memories (images, videos, moments) sorted by time
+        function loadAllMemories() {
+            fetch('/api/get_all_memories')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayAllMemories(data.memories);
+                    } else {
+                        showEmptyState('allMemoriesGrid', 'no_memories');
+                    }
+                })
+                .catch(error => {
+                    console.log('Could not load all memories:', error);
+                    showEmptyState('allMemoriesGrid', 'error_load_data');
+                });
+        }
+
+        // Load images from user directory
+        function loadImages() {
+            fetch('/api/get_images')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.images.length > 0) {
+                        displayImages(data.images);
+                    } else {
+                        showEmptyState('photosGallery', 'no_photos');
+                    }
+                })
+                .catch(error => {
+                    console.log('Could not load images:', error);
+                    showEmptyState('photosGallery', 'error_load_data');
+                });
+        }
+
+        // Load videos from user directory
+        function loadVideos() {
+            fetch('/api/get_videos')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.videos.length > 0) {
+                        displayVideos(data.videos);
+                    } else {
+                        showEmptyState('videosGrid', '🎬 Chưa có video nào');
+                    }
+                })
+                .catch(error => {
+                    console.log('Could not load videos:', error);
+                    showEmptyState('videosGrid', '❌ Không thể tải video');
+                });
+        }
+
+        // Load user created memories
+        function loadUserCreatedMemories() {
+            console.log('🔍 DEBUG: loadUserCreatedMemories called');
+            
+            fetch('/api/get_memories')
+                .then(response => {
+                    console.log('🔍 DEBUG: API response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('🔍 DEBUG: API response data:', data);
+                    if (data.success && data.memories.length > 0) {
+                        console.log('🔍 DEBUG: Displaying', data.memories.length, 'memories');
+                        displayMemories(data.memories);
+                    } else {
+                        console.log('🔍 DEBUG: No memories found or API failed');
+                        showEmptyState('memoriesGrid', '✨ Chưa có khoảnh khắc nào được tạo');
+                    }
+                })
+                .catch(error => {
+                    console.log('❌ ERROR loadUserCreatedMemories:', error);
+                    showEmptyState('memoriesGrid', '❌ Không thể tải khoảnh khắc');
+                });
+        }
+
+        // Display all memories in mixed grid with performance optimization
+        function displayAllMemories(memories) {
+            const container = document.getElementById('allMemoriesGrid');
+            container.innerHTML = '';
+
+            if (memories.length === 0) {
+                showEmptyState('allMemoriesGrid', '📚 Chưa có kỷ niệm nào');
+                return;
+            }
+
+            // Store all data for pagination
+            allMemoriesData = memories;
+            
+            // Extract only images for lightbox navigation
+            const allImages = memories.filter(memory => memory.type === 'image');
+            allImagesData = allImages;
+            globalImages = allImages;
+
+            // Load all memories with lazy loading
+            memories.forEach((memory, index) => {
+                const element = createMixedMemoryElement(memory, allImages);
+                container.appendChild(element);
+                
+                // Apply lazy loading to all images except first 3
+                const img = element.querySelector('img');
+                if (img) {
+                    if (index < 3) {
+                        img.dataset.critical = 'true';
+                        loadImage(img);
+                    } else if (imageObserver) {
+                        img.dataset.src = img.src;
+                        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                        imageObserver.observe(img);
+                        
+                        // Add placeholder
+                        const placeholder = document.createElement('div');
+                        placeholder.className = 'lazy-placeholder';
+                        placeholder.style.position = 'absolute';
+                        placeholder.style.top = '0';
+                        placeholder.style.left = '0';
+                        placeholder.style.width = '100%';
+                        placeholder.style.height = '100%';
+                        img.parentElement.appendChild(placeholder);
+                    }
+                }
+            });
+
+            // Grid layout will handle positioning automatically
+        }
+
+        // Create mixed memory element for "Tất cả" tab
+        function createMixedMemoryElement(memory, allImages = []) {
+            const div = document.createElement('div');
+            div.className = 'memory-card';
+
+            let content = '';
+            let icon = '';
+            let title = memory.title || memory.filename || 'Không có tiêu đề';
+            let description = memory.description || 'Không có mô tả';
+            let date = new Date(memory.modified).toLocaleDateString('vi-VN');
+
+            // Store data for event handlers
+            div.memoryData = memory;
+            div.allImagesData = allImages;
+
+            switch(memory.type) {
+                case 'image':
+                    icon = '📸';
+                    content = `
+                        <img src="${memory.path}" alt="${title}" class="memory-image clickable-image" data-type="image" style="width: 100%; height: auto; display: block; cursor: pointer;" 
+                             onerror="this.parentElement.style.display='none';">
+                    `;
+                    break;
+                case 'video':
+                    icon = '🎬';
+                    if (memory.preview) {
+                        content = `
+                            <img src="${memory.preview}" alt="${title}" class="memory-image clickable-video" data-type="video" style="width: 100%; height: auto; display: block; cursor: pointer;" 
+                                 onerror="this.parentElement.style.display='none';">
+                        `;
+                    } else {
+                        // Skip videos without preview
+                        div.style.display = 'none';
+                        return div;
+                    }
+                    break;
+                case 'moment':
+                    // Skip moment items
+                    div.style.display = 'none';
+                    return div;
+            }
+
+            div.innerHTML = `
+                ${content}
+                <div class="memory-info">
+                    <div class="photo-meta">
+                        <small>📅 ${date}</small>
+                        <small>${icon}</small>
+                    </div>
+                </div>
+            `;
+
+            // Add event listeners
+            const imageElement = div.querySelector('.clickable-image');
+            const videoElement = div.querySelector('.clickable-video');
+
+            if (imageElement) {
+                imageElement.addEventListener('click', function() {
+                    // Create mixed media list for navigation using allMemoriesData
+                    const mixedMediaList = allMemoriesData.map(item => ({
+                        path: item.path,
+                        title: item.title || item.filename || 'Media',
+                        type: item.type,
+                        preview: item.preview
+                    }));
+                    
+                    // Find current index in mixed list
+                    const currentIndex = mixedMediaList.findIndex(item => item.path === memory.path);
+                    
+                    openMixedMediaViewer(memory.path, title, memory.type, mixedMediaList, currentIndex);
+                });
+            }
+
+            if (videoElement) {
+                videoElement.addEventListener('click', function() {
+                    // Create mixed media list for navigation using allMemoriesData
+                    const mixedMediaList = allMemoriesData.map(item => ({
+                        path: item.path,
+                        title: item.title || item.filename || 'Media',
+                        type: item.type,
+                        preview: item.preview
+                    }));
+                    
+                    // Find current index in mixed list
+                    const currentIndex = mixedMediaList.findIndex(item => item.path === memory.path);
+                    
+                    openMixedMediaViewer(memory.path, title, memory.type, mixedMediaList, currentIndex);
+                });
+            }
+
+            return div;
+        }
+
+        // Display images with performance optimization
+        function displayImages(images) {
+            const container = document.getElementById('photosGallery');
+            container.innerHTML = '';
+            
+            if (images.length === 0) {
+                showEmptyState('photosGallery', '📸 Chưa có hình ảnh nào');
+                return;
+            }
+
+            // Store globally for navigation
+            allImagesData = images;
+            globalImages = images;
+
+            // Load all images with lazy loading
+            images.forEach((image, index) => {
+                const element = createImageElement(image, images);
+                container.appendChild(element);
+                
+                // Apply lazy loading to all images except first 3
+                const img = element.querySelector('img');
+                if (img) {
+                    if (index < 3) {
+                        img.dataset.critical = 'true';
+                        loadImage(img);
+                    } else if (imageObserver) {
+                        img.dataset.src = img.src;
+                        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+                        imageObserver.observe(img);
+                        
+                        // Add placeholder
+                        const placeholder = document.createElement('div');
+                        placeholder.className = 'lazy-placeholder';
+                        placeholder.style.position = 'absolute';
+                        placeholder.style.top = '0';
+                        placeholder.style.left = '0';
+                        placeholder.style.width = '100%';
+                        placeholder.style.height = '100%';
+                        img.parentElement.appendChild(placeholder);
+                    }
+                }
+            });
+
+            // Optimize masonry layout after all elements are added
+            setTimeout(() => optimizeMasonryLayout('photosGallery'), 100);
+        }
+
+        // Create image element
+        function createImageElement(image, allImages = []) {
+            const div = document.createElement('div');
+            div.className = 'photo-item';
+
+            const date = new Date(image.modified).toLocaleDateString('vi-VN');
+            const title = image.filename.split('.')[0];
+            const sizeStr = formatFileSize(image.size);
+
+            div.innerHTML = `
+                <img src="${image.path}" alt="${title}" class="clickable-photo" data-image-path="${image.path}" data-title="${title}" style="width: 100%; height: auto; display: block; cursor: pointer;" 
+                     onerror="this.parentElement.style.display='none';">
+                <div class="photo-info">
+                    <div class="photo-meta">
+                        <small>📅 ${date}</small>
+                        <small>📁 ${sizeStr}</small>
+                    </div>
+                </div>
+            `;
+
+            // Store reference to all images for navigation
+            div.allImages = allImages;
+            div.imageData = image;
+
+            // Add event listener
+            const photoElement = div.querySelector('.clickable-photo');
+            if (photoElement) {
+                photoElement.addEventListener('click', function() {
+                    openLightboxWithImages(image.path, title, allImages.length);
+                });
+            }
+
+            return div;
+        }
+
+        // Display videos
+        function displayVideos(videos) {
+            const container = document.getElementById('videosGrid');
+            container.innerHTML = '';
+
+            videos.forEach((video, index) => {
+                const element = createVideoElement(video, videos, index);
+                container.appendChild(element);
+            });
+        }
+
+        // Display memories
+        function displayMemories(memories) {
+            console.log('🔍 DEBUG displayMemories: called with', memories.length, 'memories');
+            console.log('🔍 DEBUG displayMemories: memories data:', memories);
+            
+            const container = document.getElementById('memoriesGrid');
+            console.log('🔍 DEBUG displayMemories: container found:', !!container);
+            
+            if (!container) {
+                console.error('❌ ERROR: memoriesGrid container not found!');
+                return;
+            }
+            
+            container.innerHTML = '';
+
+            memories.forEach((memory, index) => {
+                console.log('🔍 DEBUG displayMemories: processing memory', index, memory);
+                try {
+                    const element = createMemoryElement(memory, memories, index);
+                    console.log('🔍 DEBUG displayMemories: created element:', element);
+                    container.appendChild(element);
+                } catch (error) {
+                    console.error('❌ ERROR creating memory element:', error);
+                    console.error('❌ ERROR memory data:', memory);
+                }
+            });
+            
+            console.log('🔍 DEBUG displayMemories: finished, container children:', container.children.length);
+        }
+
+        // Create video element
+        function createVideoElement(video, videoList = [], index = 0) {
+            const div = document.createElement('div');
+            div.className = 'video-item';
+
+            const date = new Date(video.modified).toLocaleDateString('vi-VN');
+            const title = video.filename.split('.')[0];
+            const sizeStr = formatFileSize(video.size);
+
+            // Skip videos without preview
+            if (!video.preview) {
+                div.style.display = 'none';
+                return div;
+            }
+
+            div.innerHTML = `
+                <div class="video-thumbnail clickable-video-item" style="position: relative;">
+                    <img src="${video.preview}" alt="${video.filename}" loading="lazy" style="width: 100%; height: auto; display: block;" 
+                         onerror="this.parentElement.parentElement.style.display='none';">
+                    <div class="video-play-overlay">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <div class="video-meta">
+                        <span>📅 ${date}</span>
+                        <span class="video-duration">${sizeStr}</span>
+                    </div>
+                </div>
+            `;
+
+            // Add event listener with navigation support
+            const videoElement = div.querySelector('.clickable-video-item');
+            if (videoElement) {
+                videoElement.addEventListener('click', function() {
+                    openVideoPlayer(video.path, video.filename, videoList, index);
+                });
+            }
+
+            return div;
+        }
+
+        // Create memory element (giống như video element)
+        function createMemoryElement(memory, memoryList = [], index = 0) {
+            console.log('🔍 DEBUG createMemoryElement: creating element for', memory);
+            
+            const div = document.createElement('div');
+            div.className = 'memory-item';
+
+            const date = new Date(memory.created || memory.modified).toLocaleDateString('vi-VN');
+            const title = memory.title || memory.filename || 'Khoảnh khắc';
+            const description = memory.description || '';
+            const sizeStr = formatFileSize(memory.size);
+
+            console.log('🔍 DEBUG createMemoryElement: title =', title, 'type =', memory.type);
+
+            // Skip items without valid media
+            if (memory.type === 'video' && !memory.preview) {
+                div.style.display = 'none';
+                return div;
+            }
+
+            div.innerHTML = `
+                <div class="memory-thumbnail clickable-memory-item" style="position: relative;">
+                    ${memory.type === 'image' ? 
+                        `<img src="${memory.path}" alt="${title}" loading="lazy" style="width: 100%; height: auto; display: block;" 
+                             onerror="this.parentElement.parentElement.style.display='none';">` :
+                        memory.type === 'video' ?
+                        `<img src="${memory.preview}" alt="${title}" loading="lazy" style="width: 100%; height: auto; display: block;" 
+                             onerror="this.parentElement.parentElement.style.display='none';">` :
+                        `<div style="display: none;"></div>`
+                    }
+                    ${memory.type === 'video' ? 
+                        `<div class="video-play-overlay">
+                            <i class="fas fa-play"></i>
+                        </div>` : ''
+                    }
+                </div>
+                <div class="memory-info">
+                    <div class="memory-meta">
+                        <span>📅 ${date}</span>
+                        <span class="memory-duration">${sizeStr}</span>
+                    </div>
+                </div>
+            `;
+            
+            console.log('🔍 DEBUG createMemoryElement: created div HTML:', div.outerHTML.substring(0, 200) + '...');
+
+            // Add event listener
+            const memoryElement = div.querySelector('.clickable-memory-item');
+            if (memoryElement) {
+                memoryElement.addEventListener('click', function() {
+                    if (memory.type === 'image') {
+                        openLightboxWithImages(memory.path, memory.filename, memoryList.length);
+                    } else if (memory.type === 'video') {
+                        openVideoPlayer(memory.path, memory.filename, memoryList, index);
+                    }
+                });
+            }
+
+            return div;
+        }
+
+        // Display user memories
+        function displayUserMemories(memories) {
+            const container = document.getElementById('userCreatedMemories');
+            container.innerHTML = '';
+
+            if (memories.length === 0) {
+                showEmptyState('userCreatedMemories', '✨ Chưa có khoảnh khắc nào được tạo');
+                return;
+            }
+
+            // Sort memories by modified time (newest first)
+            memories.sort((a, b) => b.modified - a.modified);
+
+            memories.forEach((memory, index) => {
+                const memoryElement = createVideoMemoryElement(memory, memories, index);
+                container.appendChild(memoryElement);
+            });
+        }
+
+        // Show empty state
+        function showEmptyState(containerId, message) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; color: #888; padding: 40px;">
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        // Open lightbox for images
+        // Global variable to store current images for lightbox navigation
+        let currentImages = [];
+        let currentImageIndex = 0;
+        let globalImages = []; // Store all images for navigation
+
+        function openLightboxWithImages(imagePath, title, totalImages) {
+            // Find the element that was clicked to get all images
+            const container = event.target.closest('.photo-item') || event.target.closest('[data-images]');
+            if (container && container.allImages) {
+                currentImages = container.allImages;
+            } else {
+                // Fallback to global images or single image
+                currentImages = globalImages.length > 0 ? globalImages : [{path: imagePath, title: title}];
+            }
+            
+            currentImageIndex = currentImages.findIndex(img => img.path === imagePath);
+            if (currentImageIndex === -1) currentImageIndex = 0;
+            
+            showLightboxImage();
+        }
+
+        function openLightbox(imagePath, title, allImages = []) {
+            // If allImages provided, use for navigation
+            if (allImages.length > 0) {
+                currentImages = allImages;
+                currentImageIndex = allImages.findIndex(img => img.path === imagePath);
+            } else {
+                currentImages = [{path: imagePath, title: title}];
+                currentImageIndex = 0;
+            }
+            
+            showLightboxImage();
+        }
+
+        function showLightboxImage() {
+            // Remove existing lightbox
+            const existingLightbox = document.querySelector('.image-lightbox');
+            if (existingLightbox) {
+                document.body.removeChild(existingLightbox);
+            }
+
+            const currentImage = currentImages[currentImageIndex];
+            const lightbox = document.createElement('div');
+            lightbox.className = 'image-lightbox';
+            lightbox.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.9); z-index: 10000; display: flex; 
+                align-items: center; justify-content: center; cursor: pointer;
+            `;
+            
+            lightbox.innerHTML = `
+                <div style="max-width: 90%; max-height: 90%; position: relative;" onclick="event.stopPropagation();">
+                    <img src="${currentImage.path}" alt="${currentImage.title || currentImage.filename || ''}" 
+                         style="max-width: 100%; max-height: 85vh; object-fit: contain; display: block; margin: 0 auto;">
+                    
+                    <!-- Close button -->
+                    <div style="position: absolute; top: -40px; right: 0; color: white; font-size: 30px; cursor: pointer;" 
+                         onclick="closeLightbox()">&times;</div>
+                    
+                    <!-- Title -->
+                    <div style="position: absolute; bottom: -40px; left: 0; color: white; font-size: 16px; max-width: 100%;">
+                        ${currentImage.title || currentImage.filename || 'Hình ảnh'} (${currentImageIndex + 1}/${currentImages.length})
+                    </div>
+                    
+                    <!-- Navigation arrows -->
+                    ${currentImages.length > 1 ? `
+                        <div style="position: absolute; left: -60px; top: 50%; transform: translateY(-50%); 
+                                    color: white; font-size: 40px; cursor: pointer; background: rgba(0,0,0,0.5); 
+                                    border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;"
+                             onclick="navigateLightbox(-1)">&lt;</div>
+                        
+                        <div style="position: absolute; right: -60px; top: 50%; transform: translateY(-50%); 
+                                    color: white; font-size: 40px; cursor: pointer; background: rgba(0,0,0,0.5); 
+                                    border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;"
+                             onclick="navigateLightbox(1)">&gt;</div>
+                    ` : ''}
+                </div>
+            `;
+            
+            lightbox.onclick = function() {
+                closeLightbox();
+            };
+            
+            document.body.appendChild(lightbox);
+            
+            // Add keyboard navigation
+            document.addEventListener('keydown', handleLightboxKeys);
+        }
+
+        function handleLightboxKeys(e) {
+            const lightbox = document.querySelector('.image-lightbox');
+            if (!lightbox) return;
+            
+            switch(e.key) {
+                case 'Escape':
+                    closeLightbox();
+                    break;
+                case 'ArrowLeft':
+                    if (currentImages.length > 1) navigateLightbox(-1);
+                    break;
+                case 'ArrowRight':
+                    if (currentImages.length > 1) navigateLightbox(1);
+                    break;
+            }
+        }
+
+        function closeLightbox() {
+            const lightbox = document.querySelector('.image-lightbox');
+            if (lightbox) {
+                document.body.removeChild(lightbox);
+                document.removeEventListener('keydown', handleLightboxKeys);
+            }
+        }
+
+        function navigateLightbox(direction) {
+            currentImageIndex += direction;
+            if (currentImageIndex < 0) currentImageIndex = currentImages.length - 1;
+            if (currentImageIndex >= currentImages.length) currentImageIndex = 0;
+            showLightboxImage();
+        }
+
+        // Play video
+        function playVideo(videoPath) {
+            // Create video modal
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.9); z-index: 10000; display: flex; 
+                align-items: center; justify-content: center; cursor: pointer;
+            `;
+            
+            modal.innerHTML = `
+                <div style="max-width: 90%; max-height: 90%; position: relative;" onclick="event.stopPropagation();">
+                    <video controls autoplay style="max-width: 100%; max-height: 100%;">
+                        <source src="${videoPath}" type="video/mp4">
+                        Trình duyệt không hỗ trợ video.
+                    </video>
+                    <div style="position: absolute; top: -40px; right: 0; color: white; font-size: 30px; cursor: pointer;" onclick="document.body.removeChild(this.closest('div[style*=\"position: fixed\"]'))">&times;</div>
+                </div>
+            `;
+            
+            modal.onclick = function() {
+                document.body.removeChild(modal);
+            };
+            
+            document.body.appendChild(modal);
+        }
+
+        // Mixed Media Viewer - Unified viewer for images and videos with navigation
+        let currentMixedMediaIndex = 0;
+        let currentMixedMediaList = [];
+
+        function openMixedMediaViewer(mediaPath, title, mediaType, mediaList = [], index = 0) {
+            currentMixedMediaList = mediaList;
+            currentMixedMediaIndex = index;
+            
+            const modal = document.createElement('div');
+            modal.id = 'mixedMediaModal';
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.9); z-index: 10000; display: flex; 
+                align-items: center; justify-content: center; cursor: pointer;
+            `;
+            
+            updateMixedMediaModal(modal);
+            
+            // Close modal when clicking outside
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    closeMixedMediaModal();
+                }
+            };
+            
+            // Add keyboard navigation
+            document.addEventListener('keydown', handleMixedMediaKeyPress);
+            
+            document.body.appendChild(modal);
+        }
+
+        function updateMixedMediaModal(modal) {
+            const currentMedia = currentMixedMediaList[currentMixedMediaIndex];
+            const isVideo = currentMedia.type === 'video';
+            
+            modal.innerHTML = `
+                <div class="media-container" style="max-width: 90%; max-height: 90%; position: relative;" onclick="event.stopPropagation();">
+                    <!-- Close button -->
+                    <div class="close-btn" style="position: absolute; top: -40px; right: 0; color: white; font-size: 30px; cursor: pointer; z-index: 10001;" onclick="closeMixedMediaModal()">&times;</div>
+                    
+                    <!-- Navigation buttons -->
+                    ${currentMixedMediaList.length > 1 ? `
+                        <div class="nav-btn nav-prev" style="position: absolute; left: -60px; top: 50%; transform: translateY(-50%); color: white; font-size: 40px; cursor: pointer; z-index: 10001; background: rgba(0,0,0,0.5); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;" onclick="navigateMixedMedia(-1)">
+                            &lt;
+                        </div>
+                        <div class="nav-btn nav-next" style="position: absolute; right: -60px; top: 50%; transform: translateY(-50%); color: white; font-size: 40px; cursor: pointer; z-index: 10001; background: rgba(0,0,0,0.5); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;" onclick="navigateMixedMedia(1)">
+                            &gt;
+                        </div>
+                    ` : ''}
+                    
+                    <!-- Media title -->
+                    <div class="media-title" style="color: white; text-align: center; margin-bottom: 10px; font-size: 18px; font-weight: 500;">${currentMedia.title}</div>
+                    
+                    <!-- Media content -->
+                    ${isVideo ? `
+                        <video id="currentMixedVideo" controls autoplay style="max-width: 100%; max-height: 85vh; border-radius: 8px;">
+                            <source src="${currentMedia.path}" type="video/mp4">
+                            <source src="${currentMedia.path}" type="video/webm">
+                            <source src="${currentMedia.path}" type="video/ogg">
+                            Trình duyệt không hỗ trợ video.
+                        </video>
+                    ` : `
+                        <img src="${currentMedia.path}" alt="${currentMedia.title}" 
+                             style="max-width: 100%; max-height: 85vh; object-fit: contain; display: block; margin: 0 auto; border-radius: 8px;">
+                    `}
+                    
+                    <!-- Media counter -->
+                    ${currentMixedMediaList.length > 1 ? `
+                        <div class="media-counter" style="color: white; text-align: center; margin-top: 10px; font-size: 14px;">
+                            ${currentMixedMediaIndex + 1} / ${currentMixedMediaList.length} (${isVideo ? 'Video' : 'Hình ảnh'})
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function closeMixedMediaModal() {
+            const modal = document.getElementById('mixedMediaModal');
+            if (modal) {
+                // Stop video if playing
+                const video = modal.querySelector('video');
+                if (video) {
+                    video.pause();
+                    video.currentTime = 0;
+                }
+                
+                // Remove keyboard event listener
+                document.removeEventListener('keydown', handleMixedMediaKeyPress);
+                
+                // Remove modal
+                document.body.removeChild(modal);
+                
+                // Reset variables
+                currentMixedMediaList = [];
+                currentMixedMediaIndex = 0;
+            }
+        }
+
+        function navigateMixedMedia(direction) {
+            if (currentMixedMediaList.length <= 1) return;
+            
+            // Stop current video if playing
+            const currentVideo = document.getElementById('currentMixedVideo');
+            if (currentVideo) {
+                currentVideo.pause();
+                currentVideo.currentTime = 0;
+            }
+            
+            currentMixedMediaIndex += direction;
+            
+            // Loop around
+            if (currentMixedMediaIndex < 0) {
+                currentMixedMediaIndex = currentMixedMediaList.length - 1;
+            } else if (currentMixedMediaIndex >= currentMixedMediaList.length) {
+                currentMixedMediaIndex = 0;
+            }
+            
+            // Update modal content
+            const modal = document.getElementById('mixedMediaModal');
+            if (modal) {
+                updateMixedMediaModal(modal);
+            }
+        }
+
+        function handleMixedMediaKeyPress(e) {
+            switch(e.key) {
+                case 'Escape':
+                    closeMixedMediaModal();
+                    break;
+                case 'ArrowLeft':
+                    navigateMixedMedia(-1);
+                    break;
+                case 'ArrowRight':
+                    navigateMixedMedia(1);
+                    break;
+            }
+        }
+
+        // Enhanced video player with navigation
+        let currentVideoIndex = 0;
+        let currentVideoList = [];
+
+        function openVideoPlayer(videoPath, title, videoList = [], index = 0) {
+            currentVideoList = videoList;
+            currentVideoIndex = index;
+            
+            const modal = document.createElement('div');
+            modal.id = 'videoModal';
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.9); z-index: 10000; display: flex; 
+                align-items: center; justify-content: center; cursor: pointer;
+            `;
+            
+            modal.innerHTML = `
+                <div class="video-container" style="max-width: 90%; max-height: 90%; position: relative;" onclick="event.stopPropagation();">
+                    <!-- Close button -->
+                    <div class="close-btn" style="position: absolute; top: -40px; right: 0; color: white; font-size: 30px; cursor: pointer; z-index: 10001;" onclick="closeVideoModal()">&times;</div>
+                    
+                    <!-- Navigation buttons -->
+                    ${currentVideoList.length > 1 ? `
+                        <div class="nav-btn nav-prev" style="position: absolute; left: -50px; top: 50%; transform: translateY(-50%); color: white; font-size: 30px; cursor: pointer; z-index: 10001; background: rgba(0,0,0,0.5); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;" onclick="navigateVideo(-1)">
+                            <i class="fas fa-chevron-left"></i>
+                        </div>
+                        <div class="nav-btn nav-next" style="position: absolute; right: -50px; top: 50%; transform: translateY(-50%); color: white; font-size: 30px; cursor: pointer; z-index: 10001; background: rgba(0,0,0,0.5); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;" onclick="navigateVideo(1)">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    ` : ''}
+                    
+                    <!-- Video title -->
+                    <div class="video-title" style="color: white; text-align: center; margin-bottom: 10px; font-size: 18px; font-weight: 500;">${title}</div>
+                    
+                    <!-- Video element -->
+                    <video id="currentVideo" controls autoplay style="max-width: 100%; max-height: 85vh; border-radius: 8px;">
+                        <source src="${videoPath}" type="video/mp4">
+                        <source src="${videoPath}" type="video/webm">
+                        <source src="${videoPath}" type="video/ogg">
+                        Trình duyệt không hỗ trợ video.
+                    </video>
+                    
+                    <!-- Video counter -->
+                    ${currentVideoList.length > 1 ? `
+                        <div class="video-counter" style="color: white; text-align: center; margin-top: 10px; font-size: 14px;">
+                            ${currentVideoIndex + 1} / ${currentVideoList.length}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            // Close modal when clicking outside
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    closeVideoModal();
+                }
+            };
+            
+            // Add keyboard navigation
+            document.addEventListener('keydown', handleVideoKeyPress);
+            
+            document.body.appendChild(modal);
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            if (modal) {
+                // Stop video
+                const video = modal.querySelector('video');
+                if (video) {
+                    video.pause();
+                    video.currentTime = 0;
+                }
+                
+                // Remove keyboard event listener
+                document.removeEventListener('keydown', handleVideoKeyPress);
+                
+                // Remove modal
+                document.body.removeChild(modal);
+                
+                // Reset variables
+                currentVideoList = [];
+                currentVideoIndex = 0;
+            }
+        }
+
+        function navigateVideo(direction) {
+            if (currentVideoList.length <= 1) return;
+            
+            currentVideoIndex += direction;
+            
+            // Loop around
+            if (currentVideoIndex < 0) {
+                currentVideoIndex = currentVideoList.length - 1;
+            } else if (currentVideoIndex >= currentVideoList.length) {
+                currentVideoIndex = 0;
+            }
+            
+            const currentVideo = currentVideoList[currentVideoIndex];
+            updateVideoModal(currentVideo);
+        }
+
+        function updateVideoModal(videoData) {
+            const modal = document.getElementById('videoModal');
+            if (!modal) return;
+            
+            // Update title
+            const title = modal.querySelector('.video-title');
+            if (title) {
+                title.textContent = videoData.filename || videoData.title || 'Video';
+            }
+            
+            // Update video source
+            const video = modal.querySelector('#currentVideo');
+            if (video) {
+                video.src = videoData.path;
+                video.load();
+                video.play();
+            }
+            
+            // Update counter
+            const counter = modal.querySelector('.video-counter');
+            if (counter) {
+                counter.textContent = `${currentVideoIndex + 1} / ${currentVideoList.length}`;
+            }
+        }
+
+        function handleVideoKeyPress(e) {
+            switch(e.key) {
+                case 'Escape':
+                    closeVideoModal();
+                    break;
+                case 'ArrowLeft':
+                    navigateVideo(-1);
+                    break;
+                case 'ArrowRight':
+                    navigateVideo(1);
+                    break;
+            }
+        }
+
+        // Initialize data loading when page loads
+        window.addEventListener('load', function() {
+            const hash = window.location.hash.substring(1);
+            
+            if (hash) {
+                // Check for sub-section routing (e.g., #memories/photos)
+                const parts = hash.split('/');
+                const section = parts[0];
+                const subsection = parts[1];
+                
+                if (subsection && ['biography', 'memories', 'create'].includes(section)) {
+                    showSection(section);
+                    setTimeout(() => {
+                        showSubSection(section, subsection);
+                    }, 100);
+                } else if (['biography', 'memories', 'create'].includes(section)) {
+                    showSection(section);
+                    if (section === 'memories') {
+                        setTimeout(() => {
+                            loadAllMemories(); // Load default "Tất cả" tab
+                        }, 100);
+                    }
+                }
+            } else {
+                // Default: load memories/all
+                setTimeout(() => {
+                    loadAllMemories();
+                }, 100);
+            }
+        });
+
+        // Create video memory element for moments
+        function createVideoMemoryElement(memory, videoList = [], index = 0) {
+            const div = document.createElement('div');
+            div.className = 'created-memory-item';
+            
+            const date = new Date(memory.modified * 1000);
+            const sizeStr = formatFileSize(memory.size);
+            
+            div.innerHTML = `
+                <div class="memory-thumbnail video-thumbnail-clickable">
+                    ${memory.preview ? 
+                        `<img src="${memory.preview}" alt="${memory.filename}" loading="lazy">` :
+                        `<div class="video-placeholder">
+                            <i class="fas fa-play" style="font-size: 48px; color: white;"></i>
+                        </div>`
+                    }
+                    <div class="play-overlay">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="memory-info">
+                    <h4 class="memory-title">${memory.filename}</h4>
+                    <p class="memory-date">🎬 ${date.toLocaleDateString('vi-VN')} • ${sizeStr}</p>
+                </div>
+            `;
+            
+            // Store data and add event listener to avoid onclick issues
+            div.setAttribute('data-video-path', memory.path);
+            div.setAttribute('data-video-title', memory.filename);
+            div.setAttribute('data-video-index', index);
+            div.setAttribute('data-video-list', JSON.stringify(videoList));
+            
+            // Add click event listener
+            const thumbnail = div.querySelector('.video-thumbnail-clickable');
+            if (thumbnail) {
+                thumbnail.addEventListener('click', function() {
+                    const videoPath = div.getAttribute('data-video-path');
+                    const videoTitle = div.getAttribute('data-video-title');
+                    const videoIndex = parseInt(div.getAttribute('data-video-index'));
+                    const videoListData = div.getAttribute('data-video-list');
+                    const videoList = videoListData ? JSON.parse(videoListData) : [];
+                    
+                    openVideoPlayer(videoPath, videoTitle, videoList, videoIndex);
+                });
+            }
+            
+            return div;
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Optimize masonry layout after images load
+        function optimizeMasonryLayout(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const items = container.querySelectorAll('.memory-card, .photo-item');
+            items.forEach(item => {
+                const img = item.querySelector('img');
+                if (img && img.complete) {
+                    // Image already loaded
+                    adjustItemHeight(item, img);
+                } else if (img) {
+                    // Wait for image to load
+                    img.onload = () => adjustItemHeight(item, img);
+                }
+            });
+        }
+
+        function adjustItemHeight(item, img) {
+            if (!img.naturalHeight || !img.naturalWidth) return;
+            
+            // Add loaded class for animation
+            img.classList.add('loaded');
+            
+            const aspectRatio = img.naturalHeight / img.naturalWidth;
+            const itemWidth = item.offsetWidth;
+            let newHeight;
+            
+            // Calculate optimal height based on aspect ratio
+            if (aspectRatio > 1.5) {
+                // Tall image
+                newHeight = Math.min(itemWidth * aspectRatio, 400);
+            } else if (aspectRatio < 0.7) {
+                // Wide image  
+                newHeight = Math.max(itemWidth * aspectRatio, 180);
+            } else {
+                // Square-ish image
+                newHeight = itemWidth * aspectRatio;
+            }
+            
+            const imageContainer = item.querySelector('.memory-image, .photo-placeholder');
+            if (imageContainer) {
+                imageContainer.style.height = newHeight + 'px';
+            }
+        }
+
+        // Add event listener for window resize to re-optimize layout
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                optimizeMasonryLayout('allMemoriesGrid');
+                optimizeMasonryLayout('photosGallery');
+            }, 250);
+        });
+
+
+        // Handle browser back/forward
+        window.addEventListener('popstate', function(event) {
+            if (event.state) {
+                if (event.state.section && event.state.subsection) {
+                    // Handle sub-section routing
+                    showSection(event.state.section);
+                    setTimeout(() => {
+                        showSubSection(event.state.section, event.state.subsection);
+                    }, 100);
+                } else if (event.state.section) {
+                    // Handle main section routing
+                    showSection(event.state.section);
+                }
+            }
+        });
+
+        // Initialize based on URL hash
+        window.addEventListener('load', function() {
+            const hash = window.location.hash.substring(1);
+            
+            if (hash) {
+                // Check for sub-section routing (e.g., #memories/photos)
+                const parts = hash.split('/');
+                const section = parts[0];
+                const subsection = parts[1];
+                
+                if (subsection && ['biography', 'memories', 'create'].includes(section)) {
+                    showSection(section);
+                    setTimeout(() => {
+                        showSubSection(section, subsection);
+                    }, 100);
+                } else if (['biography', 'memories', 'create'].includes(section)) {
+                    showSection(section);
+                }
+            }
+        });
+
+        // Create moment form submission
+        document.getElementById('createMomentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('title', document.getElementById('momentTitle').value);
+            formData.append('description', document.getElementById('momentDescription').value);
+            formData.append('category', document.getElementById('momentCategory').value);
+            formData.append('date', document.getElementById('momentDate').value);
+            
+            const files = document.getElementById('fileInput').files;
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files', files[i]);
+            }
+
+            // Send to server
+            fetch('/api/create_moment', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('✅ Khoảnh khắc đã được tạo thành công!');
+                    this.reset();
+                    showSection('memories'); // Switch to memories tab
+                    setTimeout(() => {
+                        showSubSection('memories', 'memories'); // Show created memories
+                    }, 100);
+                } else {
+                    alert('❌ Có lỗi xảy ra: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('❌ Có lỗi xảy ra khi tạo khoảnh khắc');
+            });
+        });
+
+        // File upload preview
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const files = e.target.files;
+            const uploadArea = document.querySelector('.upload-area');
+            
+            if (files.length > 0) {
+                uploadArea.innerHTML = `
+                    <div>
+                        📎 Đã chọn ${files.length} file(s)<br>
+                        <small>Click để chọn lại</small>
+                    </div>
+                `;
+            }
+        });
+
+        // Logout function
+        function logout() {
+            if (confirm('Bạn có chắc muốn đăng xuất?')) {
+                console.log('User logged out');
+                fetch('/api/logout', {
+                    method: 'POST'
+                })
+                .then(() => {
+                    window.location.href = '/';
+                })
+                .catch(error => {
+                    console.error('Logout error:', error);
+                    window.location.href = '/';
+                });
+            }
+        }
+
+        // Dark Mode Toggle Function
+        function toggleDarkMode() {
+            const darkModeIcon = document.getElementById('darkModeIcon');
+            const isDark = document.body.style.filter;
+            
+            if (isDark) {
+                document.body.style.filter = '';
+                darkModeIcon.textContent = '🌙';
+                localStorage.setItem('darkMode', 'disabled');
+            } else {
+                document.body.style.filter = 'invert(1) hue-rotate(180deg)';
+                darkModeIcon.textContent = '☀️';
+                localStorage.setItem('darkMode', 'enabled');
+            }
+            console.log('Dark mode toggled');
+        }
+
+        // Load Dark Mode Preference on Page Load
+        function loadDarkModePreference() {
+            const darkMode = localStorage.getItem('darkMode');
+            const darkModeIcon = document.getElementById('darkModeIcon');
+            
+            if (darkMode === 'enabled') {
+                document.body.style.filter = 'invert(1) hue-rotate(180deg)';
+                darkModeIcon.textContent = '☀️';
+            } else {
+                document.body.style.filter = '';
+                darkModeIcon.textContent = '🌙';
+            }
+        }
+
+        // ==========================================
+        // LANGUAGE SWITCHING SYSTEM
+        // ==========================================
+
+        // Language translations
+        const translations = {
+            'vi': {
+                'logout': '🚪 Đăng xuất',
+                'user_subtitle': 'Lưu giữ những kỷ niệm đẹp nhất',
+                'biography': 'Tiểu sử',
+                'memory_library': 'Thư viện ký ức',
+                'create_moment': 'Tạo khoảnh khắc',
+                'memory_library_title': '🏛️ Thư viện ký ức',
+                'all': 'Tất cả',
+                'photos': 'Hình ảnh',
+                'videos': 'Video',
+                'created_moments': 'Khoảnh khắc đã tạo',
+                'biography_title': '📖 Câu chuyện cuộc đời',
+                'create_moment_title': '✨ Tạo khoảnh khắc mới',
+                'no_memories': '📚 Chưa có kỷ niệm nào',
+                'no_photos': '📸 Chưa có hình ảnh nào',
+                'no_videos': '🎬 Chưa có video nào',
+                'error_load_data': '❌ Không thể tải dữ liệu',
+                'footer_text': '© 2025 EverTrace - Lưu giữ kỷ niệm, tạo nên di sản'
+            },
+            'en': {
+                'logout': '🚪 Logout',
+                'user_subtitle': 'Preserving your most beautiful memories',
+                'biography': 'Biography',
+                'memory_library': 'Memory Library',
+                'create_moment': 'Create Moment',
+                'memory_library_title': '🏛️ Memory Library',
+                'all': 'All',
+                'photos': 'Photos',
+                'videos': 'Videos',
+                'created_moments': 'Created Moments',
+                'biography_title': '📖 Life Story',
+                'create_moment_title': '✨ Create New Moment',
+                'no_memories': '📚 No memories yet',
+                'no_photos': '📸 No photos yet',
+                'no_videos': '🎬 No videos yet',
+                'error_load_data': '❌ Cannot load data',
+                'footer_text': '© 2025 EverTrace - Preserve memories, create legacy'
+            }
+        };
+
+        let currentLanguage = localStorage.getItem('language') || 'vi';
+
+        // Toggle Language Function
+        function toggleLanguage() {
+            const label = document.getElementById('languageLabel');
+            const flagIcon = document.getElementById('flagIcon');
+            
+            if (label.textContent === 'VI') {
+                label.textContent = 'EN';
+                flagIcon.src = '/static/assets/flag/en.png';
+                flagIcon.alt = 'EN';
+                currentLanguage = 'en';
+            } else {
+                label.textContent = 'VI';
+                flagIcon.src = '/static/assets/flag/vn.png';
+                flagIcon.alt = 'VN';
+                currentLanguage = 'vi';
+            }
+            localStorage.setItem('language', currentLanguage);
+            updateLanguage();
+            console.log('Language toggled to:', label.textContent);
+        }
+
+        // Update language toggle display
+        function updateLanguageToggle() {
+            const label = document.getElementById('languageLabel');
+            const flagIcon = document.getElementById('flagIcon');
+            
+            if (currentLanguage === 'en') {
+                label.textContent = 'EN';
+                flagIcon.src = '/static/assets/flag/en.png';
+                flagIcon.alt = 'EN';
+            } else {
+                label.textContent = 'VI';
+                flagIcon.src = '/static/assets/flag/vn.png';
+                flagIcon.alt = 'VN';
+            }
+        }
+
+        // Update all text elements
+        function updateLanguage() {
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    element.textContent = translations[currentLanguage][key];
+                }
+            });
+
+            // Update dynamic content
+            updateDynamicContent();
+        }
+
+        // Update dynamic content based on language
+        function updateDynamicContent() {
+            // Update empty states and error messages
+            const emptyStates = document.querySelectorAll('.empty-state');
+            emptyStates.forEach(state => {
+                const message = state.textContent;
+                if (message.includes('📚')) {
+                    state.innerHTML = `<div style="text-align: center; padding: 60px 20px; color: var(--color-secondary);">
+                        <div style="font-size: 3em; margin-bottom: 20px;">📚</div>
+                        <p style="font-size: 1.2em; font-family: 'Inter', sans-serif;">${translations[currentLanguage]['no_memories']}</p>
+                    </div>`;
+                } else if (message.includes('📸')) {
+                    state.innerHTML = `<div style="text-align: center; padding: 60px 20px; color: var(--color-secondary);">
+                        <div style="font-size: 3em; margin-bottom: 20px;">📸</div>
+                        <p style="font-size: 1.2em; font-family: 'Inter', sans-serif;">${translations[currentLanguage]['no_photos']}</p>
+                    </div>`;
+                } else if (message.includes('🎬')) {
+                    state.innerHTML = `<div style="text-align: center; padding: 60px 20px; color: var(--color-secondary);">
+                        <div style="font-size: 3em; margin-bottom: 20px;">🎬</div>
+                        <p style="font-size: 1.2em; font-family: 'Inter', sans-serif;">${translations[currentLanguage]['no_videos']}</p>
+                    </div>`;
+                }
+            });
+        }
+
+        // Load language preference on page load
+        function loadLanguagePreference() {
+            const savedLanguage = localStorage.getItem('language') || 'vi';
+            currentLanguage = savedLanguage;
+            updateLanguage();
+            updateLanguageToggle();
+        }
+
+        // Initialize dark mode on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDarkModePreference();
+            loadLanguagePreference();
+            initPerformanceOptimizations();
+            loadUserAvatar(); // Load existing avatar
+            loadUserCover(); // Load existing cover
+            
+            // Check if flag image loads
+            const flagIcon = document.getElementById('flagIcon');
+            if (flagIcon) {
+                flagIcon.addEventListener('error', function() {
+                    console.log('Flag image failed to load:', this.src);
+                    this.style.display = 'none';
+                });
+                flagIcon.addEventListener('load', function() {
+                    console.log('Flag image loaded successfully:', this.src);
+                });
+            }
+            
+            // Check if avatar image loads  
+            const avatarImage = document.getElementById('avatar-image');
+            if (avatarImage) {
+                avatarImage.addEventListener('error', function() {
+                    console.log('Avatar image failed to load:', this.src);
+                    this.style.display = 'none';
+                    document.getElementById('avatar-initial').style.display = 'block';
+                });
+                avatarImage.addEventListener('load', function() {
+                    console.log('Avatar image loaded successfully:', this.src);
+                });
+            }
+        });
+
+        // ==========================================
+        // UTILITIES
+        // ==========================================
+
+        // Utility: Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        // Utility: Show empty state with language support
+        function showEmptyState(containerId, messageKey) {
+            const container = document.getElementById(containerId);
+            let message = messageKey;
+            
+            // Try to get translated message
+            if (translations[currentLanguage] && translations[currentLanguage][messageKey]) {
+                message = translations[currentLanguage][messageKey];
+            }
+            
+            container.innerHTML = `
+                <div class="empty-state" style="text-align: center; padding: 60px 20px; color: var(--color-secondary);">
+                    <div style="font-size: 3em; margin-bottom: 20px;">${message.split(' ')[0]}</div>
+                    <p style="font-size: 1.2em; font-family: 'Inter', sans-serif;">${message.substring(2)}</p>
+                </div>
+            `;
+        }
+
+        // Auto-update user info
+        fetch('/api/user_info')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('userName').textContent = data.username;
+                    // Load user avatar and cover
+                    loadUserAvatar();
+                    loadUserCover();
+                }
+            })
+            .catch(error => console.log('Could not load user info'));
+
+        // ==========================================
+        // AVATAR & COVER UPLOAD FUNCTIONS
+        // ==========================================
+
+        function uploadAvatar() {
+            // Create file input if not exists
+            let fileInput = document.getElementById('avatar-upload');
+            if (!fileInput) {
+                fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.id = 'avatar-upload';
+                fileInput.accept = 'image/*';
+                fileInput.style.display = 'none';
+                fileInput.onchange = handleAvatarUpload;
+                document.body.appendChild(fileInput);
+            }
+            fileInput.click();
+        }
+
+        function uploadCover() {
+            // Create file input if not exists
+            let fileInput = document.getElementById('cover-upload');
+            if (!fileInput) {
+                fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.id = 'cover-upload';
+                fileInput.accept = 'image/*';
+                fileInput.style.display = 'none';
+                fileInput.onchange = handleCoverUpload;
+                document.body.appendChild(fileInput);
+            }
+            fileInput.click();
+        }
+
+        async function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file
+            if (!file.type.startsWith('image/')) {
+                showNotification('Vui lòng chọn file hình ảnh', 'error');
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) { // 5MB
+                showNotification('File quá lớn. Vui lòng chọn file dưới 5MB', 'error');
+                return;
+            }
+
+            showNotification('Đang upload avatar...', 'info');
+
+            try {
+                const formData = new FormData();
+                formData.append('avatar', file);
+
+                const response = await fetch('/upload/avatar', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Update avatar display
+                    const avatarImage = document.getElementById('avatar-image');
+                    const avatarInitial = document.getElementById('avatar-initial');
+                    
+                    if (avatarImage && avatarInitial) {
+                        avatarImage.src = result.avatar_url + '?t=' + Date.now(); // Cache busting
+                        avatarImage.style.display = 'block';
+                        avatarImage.style.width = '100%';
+                        avatarImage.style.height = '100%';
+                        avatarImage.style.objectFit = 'cover';
+                        avatarInitial.style.display = 'none';
+                    }
+                    
+                    showNotification('Upload avatar thành công!', 'success');
+                } else {
+                    showNotification(result.message || 'Upload thất bại', 'error');
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                showNotification('Có lỗi xảy ra khi upload', 'error');
+            }
+        }
+
+        async function handleCoverUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file
+            if (!file.type.startsWith('image/')) {
+                showNotification('Vui lòng chọn file hình ảnh', 'error');
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) { // 10MB
+                showNotification('File quá lớn. Vui lòng chọn file dưới 10MB', 'error');
+                return;
+            }
+
+            showNotification('Đang upload ảnh bìa...', 'info');
+
+            try {
+                const formData = new FormData();
+                formData.append('cover', file);
+
+                const response = await fetch('/upload/cover', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Update cover display
+                    const coverImage = document.getElementById('cover-image');
+                    const coverPlaceholder = document.getElementById('cover-placeholder');
+                    
+                    coverImage.src = result.cover_url + '?t=' + Date.now(); // Cache busting
+                    coverImage.style.display = 'block';
+                    coverPlaceholder.style.display = 'none';
+                    
+                    showNotification('Upload ảnh bìa thành công!', 'success');
+                } else {
+                    showNotification(result.message || 'Upload thất bại', 'error');
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                showNotification('Có lỗi xảy ra khi upload', 'error');
+            }
+        }
+
+        async function loadUserAvatar() {
+            try {
+                // Use the existing get_user_profile API
+                const response = await fetch('/api/get_user_profile');
+                const result = await response.json();
+                
+                if (result.success && result.profile && result.profile.avatar_url) {
+                    const avatarImage = document.getElementById('avatar-image');
+                    const avatarInitial = document.getElementById('avatar-initial');
+                    
+                    avatarImage.src = result.profile.avatar_url + '?t=' + Date.now();
+                    avatarImage.style.display = 'block';
+                    avatarInitial.style.display = 'none';
+                    console.log('✅ Avatar loaded:', result.profile.avatar_url);
+                } else {
+                    console.log('No avatar found, using default');
+                }
+            } catch (error) {
+                console.log('Error loading avatar:', error);
+            }
+        }
+
+        async function loadUserCover() {
+            try {
+                // Use the existing get_user_profile API
+                const response = await fetch('/api/get_user_profile');
+                const result = await response.json();
+                
+                if (result.success && result.profile && result.profile.cover_url) {
+                    const coverImage = document.getElementById('cover-image');
+                    const coverPlaceholder = document.getElementById('cover-placeholder');
+                    
+                    coverImage.src = result.profile.cover_url + '?t=' + Date.now();
+                    coverImage.style.display = 'block';
+                    coverPlaceholder.style.display = 'none';
+                    console.log('✅ Cover loaded:', result.profile.cover_url);
+                } else {
+                    console.log('No cover found, using default');
+                }
+            } catch (error) {
+                console.log('Error loading cover:', error);
+            }
+        }
+
+        // ==========================================
+        // MEMORY UPLOAD FUNCTIONS
+        // ==========================================
+        
+        function triggerFileUpload() {
+            document.getElementById('memoryFileInput').click();
+        }
+        
+        async function handleFileUpload(event) {
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
+            
+            const progressDiv = document.getElementById('uploadProgress');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            progressDiv.style.display = 'block';
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Validate file type
+                const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/avi', 'video/mov'];
+                if (!validTypes.includes(file.type)) {
+                    showNotification(`❌ File ${file.name} không được hỗ trợ`, 'error');
+                    continue;
+                }
+                
+                // Validate file size
+                const maxSize = file.type.startsWith('video/') ? 50 * 1024 * 1024 : 10 * 1024 * 1024; // 50MB for video, 10MB for image
+                if (file.size > maxSize) {
+                    const maxSizeMB = file.type.startsWith('video/') ? '50MB' : '10MB';
+                    showNotification(`❌ File ${file.name} quá lớn (tối đa ${maxSizeMB})`, 'error');
+                    continue;
+                }
+                
+                const formData = new FormData();
+                formData.append('file', file);
+                
+                try {
+                    progressText.textContent = `Đang tải ${file.name}...`;
+                    
+                    const response = await fetch('/api/upload_memory', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        progressFill.style.width = `${((i + 1) / files.length) * 100}%`;
+                        progressText.textContent = `✅ Đã tải ${i + 1}/${files.length} file`;
+                        showNotification(`✅ Tải lên thành công: ${file.name}`, 'success');
+                        
+                        // Refresh galleries after successful upload
+                        setTimeout(() => {
+                            loadAllMemories();
+                            loadImages();
+                            loadVideos();
+                        }, 1000);
+                    } else {
+                        showNotification(`❌ Lỗi tải ${file.name}: ${result.message}`, 'error');
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    showNotification(`❌ Lỗi tải ${file.name}`, 'error');
+                }
+            }
+            
+            // Hide progress after completion
+            setTimeout(() => {
+                progressDiv.style.display = 'none';
+                progressFill.style.width = '0%';
+                progressText.textContent = '0%';
+            }, 2000);
+            
+            // Clear file input
+            event.target.value = '';
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification if not exists
+            let notification = document.getElementById('notification');
+            if (!notification) {
+                notification = document.createElement('div');
+                notification.id = 'notification';
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: white;
+                    border-radius: 10px;
+                    padding: 15px 20px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                    z-index: 10000;
+                    display: none;
+                    min-width: 250px;
+                    font-family: var(--font-body);
+                `;
+                document.body.appendChild(notification);
+            }
+
+            // Set message and style
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            // Set color based on type
+            switch(type) {
+                case 'success':
+                    notification.style.background = '#d4edda';
+                    notification.style.color = '#155724';
+                    notification.style.border = '1px solid #c3e6cb';
+                    break;
+                case 'error':
+                    notification.style.background = '#f8d7da';
+                    notification.style.color = '#721c24';
+                    notification.style.border = '1px solid #f5c6cb';
+                    break;
+                default:
+                    notification.style.background = '#d1ecf1';
+                    notification.style.color = '#0c5460';
+                    notification.style.border = '1px solid #bee5eb';
+            }
+
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+
+    <!-- Hidden file inputs -->
+    <input type="file" id="avatar-upload" style="display: none;" accept="image/*" onchange="handleAvatarUpload(event)">
+    <input type="file" id="cover-upload" style="display: none;" accept="image/*" onchange="handleCoverUpload(event)">
+</body>
+</html>

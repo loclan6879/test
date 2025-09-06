@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EverTrace - Chào mừng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            min-height: 600px;
+            display: flex;
+        }
+        
+        .welcome-section {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .welcome-section h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .welcome-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .features {
+            text-align: left;
+            margin-top: 30px;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        
+        .feature i {
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .auth-section {
+            flex: 1;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .auth-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .auth-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .auth-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .verification-section {
+            display: none;
+            text-align: center;
+        }
+        
+        .verification-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .link-button {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                max-width: 400px;
+            }
+            
+            .welcome-section {
+                padding: 40px 30px;
+            }
+            
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+            
+            .auth-section {
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1>🎬 EverTrace</h1>
+            <p>Tạo video kỷ niệm đẹp từ những hình ảnh yêu thương</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <span>📸</span>
+                    <span>Upload hình ảnh và tạo video tự động</span>
+                </div>
+                <div class="feature">
+                    <span>🎵</span>
+                    <span>Thêm nhạc nền cho video của bạn</span>
+                </div>
+                <div class="feature">
+                    <span>✨</span>
+                    <span>Hiệu ứng chuyển cảnh đẹp mắt</span>
+                </div>
+                <div class="feature">
+                    <span>💾</span>
+                    <span>Lưu trữ và quản lý video cá nhân</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Authentication Section -->
+        <div class="auth-section">
+            <!-- Tab Navigation -->
+            <div class="auth-tabs">
+                <button class="tab-button active" onclick="switchTab('login')">Đăng nhập</button>
+                <button class="tab-button" onclick="switchTab('register')">Đăng ký</button>
+            </div>
+            
+            <!-- Messages -->
+            <div id="message" class="message"></div>
+            
+            <!-- Loading -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Đang xử lý...</p>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form active">
+                <div class="form-group">
+                    <label for="loginUsername">Tên đăng nhập</label>
+                    <input type="text" id="loginUsername" name="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Mật khẩu</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                </div>
+                
+                <button type="submit" class="auth-button">Đăng nhập</button>
+            </form>
+            
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <label for="registerUsername">Tên đăng nhập</label>
+                    <input type="text" id="registerUsername" name="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPassword">Mật khẩu</label>
+                    <input type="password" id="registerPassword" name="password" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Xác nhận mật khẩu</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                
+                <button type="submit" class="auth-button">Đăng ký</button>
+            </form>
+            
+            <!-- Email Verification Section -->
+            <div id="verificationSection" class="verification-section">
+                <h3>Xác thực Email</h3>
+                <p>Chúng tôi đã gửi mã xác thực đến email của bạn.</p>
+                
+                <div class="form-group">
+                    <label for="verificationCode">Mã xác thực</label>
+                    <input type="text" id="verificationCode" placeholder="Nhập mã 6 số">
+                </div>
+                
+                <button onclick="verifyEmail()" class="auth-button">Xác thực</button>
+                <button onclick="resendVerification()" class="link-button">Gửi lại mã</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'login';
+        let pendingUsername = '';
+        
+        // Switch between login and register tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+            
+            // Update forms
+            document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+            document.getElementById(tab + 'Form').classList.add('active');
+            
+            // Hide verification section and messages
+            document.getElementById('verificationSection').style.display = 'none';
+            hideMessage();
+        }
+        
+        // Show/hide message
+        function showMessage(message, type = 'error') {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = message;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+        }
+        
+        function hideMessage() {
+            document.getElementById('message').style.display = 'none';
+        }
+        
+        // Show/hide loading
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.querySelectorAll('.auth-button').forEach(btn => btn.disabled = true);
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.querySelectorAll('.auth-button').forEach(btn => btn.disabled = false);
+        }
+        
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!username || !password) {
+                showMessage('Vui lòng nhập đầy đủ thông tin');
+                return;
+            }
+            
+            showLoading();
+            hideMessage();
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('Đăng nhập thành công! Đang chuyển hướng...', 'success');
+                    setTimeout(() => {
+                        window.location.href = result.redirect;
+                    }, 1500);
+                } else {
+                    showMessage(result.message);
+                }
+            } catch (error) {
+                showMessage('Lỗi kết nối. Vui lòng thử lại.');
+            } finally {
+                hideLoading();
+            }
+        });
+        
+        // Register form handler
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!username || !email || !password || !confirmPassword) {
+                showMessage('Vui lòng nhập đầy đủ thông tin');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showMessage('Mật khẩu xác nhận không khớp');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('Mật khẩu phải có ít nhất 6 ký tự');
+                return;
+            }
+            
+            showLoading();
+            hideMessage();
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (result.requires_verification) {
+                        pendingUsername = username;
+                        document.querySelectorAll('.auth-form').forEach(form => form.style.display = 'none');
+                        document.getElementById('verificationSection').style.display = 'block';
+                        showMessage('Đăng ký thành công! Vui lòng kiểm tra email để xác thực.', 'success');
+                    } else {
+                        showMessage('Đăng ký thành công! Vui lòng đăng nhập.', 'success');
+                        setTimeout(() => switchTab('login'), 2000);
+                    }
+                } else {
+                    showMessage(result.message);
+                }
+            } catch (error) {
+                showMessage('Lỗi kết nối. Vui lòng thử lại.');
+            } finally {
+                hideLoading();
+            }
+        });
+        
+        // Email verification
+        async function verifyEmail() {
+            const verificationCode = document.getElementById('verificationCode').value.trim();
+            
+            if (!verificationCode) {
+                showMessage('Vui lòng nhập mã xác thực');
+                return;
+            }
+            
+            showLoading();
+            hideMessage();
+            
+            try {
+                const response = await fetch('/api/verify_email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        username: pendingUsername, 
+                        verification_code: verificationCode 
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('Xác thực thành công! Đang chuyển hướng...', 'success');
+                    setTimeout(() => {
+                        window.location.href = result.redirect;
+                    }, 1500);
+                } else {
+                    showMessage(result.message);
+                }
+            } catch (error) {
+                showMessage('Lỗi kết nối. Vui lòng thử lại.');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // Resend verification
+        async function resendVerification() {
+            if (!pendingUsername) {
+                showMessage('Không tìm thấy thông tin đăng ký');
+                return;
+            }
+            
+            showLoading();
+            hideMessage();
+            
+            try {
+                const response = await fetch('/api/resend_verification', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username: pendingUsername })
+                });
+                
+                const result = await response.json();
+                showMessage(result.message, result.success ? 'success' : 'error');
+            } catch (error) {
+                showMessage('Lỗi kết nối. Vui lòng thử lại.');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // Enter key handling for verification code
+        document.getElementById('verificationCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyEmail();
+            }
+        });
+    </script>
+</body>
+</html>

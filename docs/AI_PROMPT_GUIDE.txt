@@ -1,0 +1,283 @@
+================================================================================
+                    HƯỚNG DẪN PROMPT CHO AI - EVERTRACE PROJECT
+================================================================================
+
+📝 Template Prompt để mở rộng tính năng trong EverTrace
+
+================================================================================
+🎯 1. PROMPT CHO TÍNH NĂNG UI/FRONTEND
+================================================================================
+
+Template:
+---------
+"Tôi muốn thêm tính năng [TÊN TÍNH NĂNG] vào giao diện:
+- Mô tả: [MÔ TẢ CHI TIẾT]
+- Vị trí: [VỊ TRÍ HIỂN THỊ]
+- Chức năng: [NHỮNG GÌ NGƯỜI DÙNG CÓ THỂ LÀM]
+
+Hãy cập nhật file templates/main_spa.html và static/style.css"
+
+Ví dụ cụ thể:
+-------------
+"Tôi muốn thêm tính năng Dark Mode vào giao diện:
+- Mô tả: Toggle switch để chuyển đổi giao diện sáng/tối
+- Vị trí: Góc trên bên phải header
+- Chức năng: Click để chuyển đổi theme, lưu preference vào localStorage
+
+Hãy cập nhật file templates/main_spa.html và static/style.css"
+
+================================================================================
+🔧 2. PROMPT CHO TÍNH NĂNG BACKEND/API
+================================================================================
+
+Template:
+---------
+"Tôi muốn thêm API endpoint mới:
+- Endpoint: [ĐƯỜNG DẪN API]
+- Method: [GET/POST/PUT/DELETE]
+- Chức năng: [MÔ TẢ CHỨC NĂNG]
+- Input: [DỮ LIỆU ĐẦU VÀO]
+- Output: [DỮ LIỆU TRẢ VỀ]
+
+Hãy cập nhật file src/app_restructured.py"
+
+Ví dụ cụ thể:
+-------------
+"Tôi muốn thêm API endpoint mới:
+- Endpoint: /api/search_memories
+- Method: POST
+- Chức năng: Tìm kiếm memories theo từ khóa
+- Input: {"keyword": "text", "user": "username"}
+- Output: {"results": [...], "count": number}
+
+Hãy cập nhật file src/app_restructured.py"
+
+================================================================================
+🎬 3. PROMPT CHO TÍNH NĂNG XỬ LÝ MEDIA
+================================================================================
+
+Template:
+---------
+"Tôi muốn thêm chức năng xử lý [LOẠI MEDIA]:
+- Chức năng: [MÔ TẢ CHI TIẾT]
+- Input format: [ĐỊNH DẠNG ĐẦU VÀO]
+- Output format: [ĐỊNH DẠNG ĐẦU RA]
+- Yêu cầu đặc biệt: [NẾU CÓ]
+
+Hãy cập nhật file src/video_processor.py"
+
+Ví dụ cụ thể:
+-------------
+"Tôi muốn thêm chức năng xử lý thumbnail tự động:
+- Chức năng: Tạo thumbnail từ video tự động khi upload
+- Input format: MP4, AVI, MOV
+- Output format: JPG thumbnail 300x200px
+- Yêu cầu đặc biệt: Lấy frame ở giây thứ 3
+
+Hãy cập nhật file src/video_processor.py"
+
+================================================================================
+🔐 4. PROMPT CHO TÍNH NĂNG AUTHENTICATION
+================================================================================
+
+Template:
+---------
+"Tôi muốn thêm chức năng bảo mật:
+- Tính năng: [TÊN TÍNH NĂNG]
+- Mô tả: [MÔ TẢ CHI TIẾT]
+- Bảo mật level: [CƠ BẢN/NÂNG CAO]
+- Integration: [TÍCH HỢP VỚI GÌ]
+
+Hãy cập nhật file src/auth_service.py"
+
+Ví dụ cụ thể:
+-------------
+"Tôi muốn thêm chức năng bảo mật:
+- Tính năng: Two-Factor Authentication (2FA)
+- Mô tả: Xác thực 2 bước qua email khi đăng nhập
+- Bảo mật level: Nâng cao
+- Integration: Tích hợp với email_config.py
+
+Hãy cập nhật file src/auth_service.py"
+
+================================================================================
+⚙️ 5. PROMPT CHO CẤU HÌNH SYSTEM
+================================================================================
+
+Template:
+---------
+"Tôi muốn thêm cấu hình mới:
+- Loại config: [DATABASE/EMAIL/SYSTEM/CUSTOM]
+- Mục đích: [MÔ TẢ MỤC ĐÍCH]
+- Parameters: [CÁC THAM SỐ CẦN THIẾT]
+- Default values: [GIÁ TRỊ MẶC ĐỊNH]
+
+Hãy tạo/cập nhật file trong thư mục config/"
+
+Ví dụ cụ thể:
+-------------
+"Tôi muốn thêm cấu hình mới:
+- Loại config: DATABASE
+- Mục đích: Kết nối với PostgreSQL database
+- Parameters: host, port, username, password, database_name
+- Default values: localhost:5432
+
+Hãy tạo file config/database_config.py"
+
+================================================================================
+🎯 CÁC TỪ KHÓA AI HIỂU NHANH
+================================================================================
+
+📁 File-specific prompts:
+-------------------------
+- "Cập nhật templates/main_spa.html"     → UI changes
+- "Cập nhật src/app_restructured.py"     → Backend logic
+- "Cập nhật static/style.css"            → Styling
+- "Cập nhật src/auth_service.py"         → Authentication
+- "Cập nhật src/video_processor.py"      → Media processing
+- "Tạo file mới trong config/"           → Configuration
+- "Tạo file mới trong docs/"             → Documentation
+- "Tạo file mới trong scripts/"          → Utility scripts
+
+🔧 Action keywords:
+-------------------
+- "Thêm tính năng"        → Add new feature
+- "Sửa lỗi"               → Bug fix
+- "Cải thiện"             → Enhancement
+- "Tối ưu"                → Optimization
+- "Tích hợp"              → Integration
+- "Refactor"              → Code restructuring
+- "Debug"                 → Troubleshooting
+
+📊 Scope keywords:
+------------------
+- "Giao diện"             → Frontend changes
+- "API"                   → Backend changes
+- "Database"              → Data changes
+- "Authentication"        → Security changes
+- "Media processing"      → File handling
+- "Performance"           → Speed optimization
+- "Mobile responsive"     → Mobile compatibility
+
+================================================================================
+💡 VÍ DỤ PROMPT HOÀN CHỈNH
+================================================================================
+
+Ví dụ 1 - Tính năng Share Memory:
+---------------------------------
+"Tôi muốn thêm tính năng Share Memory:
+
+🎯 Mô tả: Cho phép user tạo link public để share memory với người khác
+📍 Vị trí: Nút 'Share' trong lightbox của mỗi memory
+🔧 Chức năng: 
+- Click Share → tạo unique link
+- Link có thể xem memory mà không cần đăng nhập
+- Có thể set expiry date cho link
+- Track số lượt xem
+
+📝 Files cần update:
+- templates/main_spa.html (thêm nút Share)
+- src/app_restructured.py (API tạo share link)
+- static/style.css (styling cho share modal)
+
+Hãy implement tính năng này."
+
+Ví dụ 2 - Tính năng Comment System:
+-----------------------------------
+"Tôi muốn thêm tính năng Comment cho memories:
+
+🎯 Mô tả: Cho phép user comment vào memory của mình hoặc người khác
+📍 Vị trí: Dưới mỗi memory trong lightbox
+🔧 Chức năng:
+- Hiển thị danh sách comments
+- Thêm comment mới
+- Xóa comment của mình
+- Realtime update (optional)
+
+📝 Files cần update:
+- templates/main_spa.html (UI comments)
+- src/app_restructured.py (API comments)
+- static/style.css (styling comments)
+- LuuTru_User/{user}/comments.json (data storage)
+
+Hãy implement tính năng này."
+
+Ví dụ 3 - Tính năng Export Data:
+--------------------------------
+"Tôi muốn thêm tính năng Export dữ liệu user:
+
+🎯 Mô tả: Cho phép user export toàn bộ dữ liệu của mình
+📍 Vị trí: Settings page
+🔧 Chức năng:
+- Export thành ZIP file
+- Bao gồm: images, videos, memories, comments
+- Có thể chọn date range
+- Email link download
+
+📝 Files cần update:
+- templates/main_spa.html (settings page)
+- src/app_restructured.py (export API)
+- scripts/export_utility.py (export logic)
+- config/email_config.py (email notification)
+
+Hãy implement tính năng này."
+
+================================================================================
+🚀 KẾT QUẢ AI SẼ LÀM
+================================================================================
+
+Khi bạn sử dụng các prompt template này, AI sẽ:
+
+✅ Hiểu đúng cấu trúc dự án
+✅ Biết file nào cần sửa
+✅ Tự động cập nhật đúng vị trí
+✅ Giữ nguyên code hiện tại
+✅ Test và verify chức năng
+✅ Cập nhật documentation nếu cần
+✅ Đảm bảo compatibility với code cũ
+
+================================================================================
+📞 LƯU Ý QUAN TRỌNG
+================================================================================
+
+1. 🔒 KHÔNG BAO GIỜ ĐỀ CẬP ĐẾN thư mục LuuTru_User/ trừ khi thực sự cần thiết
+2. 📁 Luôn specify đúng đường dẫn file theo cấu trúc mới
+3. 🧪 Yêu cầu AI test functionality sau khi implement
+4. 📚 Cập nhật documentation khi có tính năng mới
+5. 🔄 Backup trước khi implement tính năng lớn
+
+================================================================================
+🎯 QUICK REFERENCE - MAPPING CHỨC NĂNG VỚI FILE
+================================================================================
+
+UI/UX Changes:
+- templates/main_spa.html
+- static/style.css
+
+Backend Logic:
+- src/app_restructured.py
+
+Authentication:
+- src/auth_service.py
+
+Media Processing:
+- src/video_processor.py
+
+Configuration:
+- config/*.py
+
+Documentation:
+- docs/*.md
+
+Utilities:
+- scripts/*.py
+
+Testing:
+- tests/*.py
+
+================================================================================
+Created: September 2025
+Last Updated: September 2025
+Version: 1.0
+Status: ✅ Ready for use
+================================================================================
