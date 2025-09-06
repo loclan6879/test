@@ -988,10 +988,25 @@ def upload_memory():
                 
                 # Generate preview using video_processor
                 from video_processor import generate_preview_thumbnail
+                
+                # Ensure the parent directory exists and is writable
+                os.makedirs(os.path.dirname(preview_path), exist_ok=True)
+                
+                # Generate the preview
                 generate_preview_thumbnail(file_path, preview_path)
+                
+                # Verify the preview was created as a file
+                if not os.path.isfile(preview_path):
+                    print(f"❌ Failed to create preview file at {preview_path}")
+                    if os.path.exists(preview_path):
+                        print(f"⚠️ Path exists but is a directory. Removing and retrying...")
+                        os.rmdir(preview_path)  # Remove if it's a directory
+                        generate_preview_thumbnail(file_path, preview_path)
                 
                 preview_url = f'/api/serve_file/{current_user}/videos/previews/{preview_filename}'
                 print(f'✅ Generated video preview: {preview_path}')
+                print(f'✅ Preview file exists: {os.path.isfile(preview_path)}')
+                print(f'✅ Preview file size: {os.path.getsize(preview_path) if os.path.exists(preview_path) else 0} bytes')
             except Exception as e:
                 print(f'❌ Error generating video preview: {e}')
         
