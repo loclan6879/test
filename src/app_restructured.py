@@ -35,12 +35,17 @@ except ImportError:
     EMAIL_AVAILABLE = False
     print("⚠️ Email configuration not available")
 
-# Define project root path
-PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..')
-os.chdir(PROJECT_ROOT)  # Change working directory to project root
+# Define project root and storage paths
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+STORAGE_DIR = os.path.join(PROJECT_ROOT, 'storage')
+os.makedirs(STORAGE_DIR, exist_ok=True)
+
+# Change working directory to project root
+os.chdir(PROJECT_ROOT)
 
 print("🚀 EVERLIVING MAIN APPLICATION STARTING...", flush=True)
-print(f"📁 Project root: {os.path.abspath(PROJECT_ROOT)}", flush=True)
+print(f"📁 Project root: {PROJECT_ROOT}", flush=True)
+print(f"📂 Storage directory: {STORAGE_DIR}", flush=True)
 
 # ================================
 # APP CONFIGURATION
@@ -106,30 +111,42 @@ def ensure_user_directories(username):
     """Ensure all user directories exist"""
     try:
         # Storage directories
-        user_folder = os.path.join('storage', username)
-        subdirs = ['images', 'videos', 'videos/previews', 'music', 'memories', 'memories/previews', 'avatar', 'cover']
+        user_folder = os.path.join(STORAGE_DIR, username)
+        subdirs = [
+            'images', 
+            'videos', 
+            'videos/previews', 
+            'music', 
+            'memories', 
+            'memories/previews', 
+            'avatar', 
+            'cover',
+            'moments'
+        ]
+        
+        # Create all required directories
         for subdir in subdirs:
             path = os.path.join(user_folder, subdir)
-            if not os.path.exists(path):
-                os.makedirs(path, exist_ok=True)
-                print(f"📁 Created subdirectory: {path}")
-        external_base_dir = r'E:\EverLiving_UserData'
-        external_user_dir = os.path.join(external_base_dir, username)
+            os.makedirs(path, exist_ok=True)
+            print(f"📁 Created directory: {os.path.abspath(path)}")
         
-        try:
-            os.makedirs(external_user_dir, exist_ok=True)
-            # Create all subdirectories in external storage too
-            external_subdirs = ['images', 'videos', 'videos/previews', 'music', 'memories', 'memories/previews', 'avatar', 'cover']
-            for subdir in external_subdirs:
-                external_path = os.path.join(external_user_dir, subdir)
-                os.makedirs(external_path, exist_ok=True)
-            print(f"📁 Created external directories: {external_user_dir}")
-        except Exception as e:
-            print(f"⚠️ Could not create external directories: {e}")
+        # Create user data files if they don't exist
+        user_data_files = [
+            os.path.join(user_folder, 'moments.json'),
+            os.path.join(STORAGE_DIR, 'Danhsach_user.json')
+        ]
+        
+        for data_file in user_data_files:
+            if not os.path.exists(data_file):
+                with open(data_file, 'w', encoding='utf-8') as f:
+                    json.dump([], f, ensure_ascii=False, indent=2)
+                print(f"📄 Created data file: {data_file}")
         
         return True
     except Exception as e:
-        print(f"❌ Error creating user directories for {username}: {e}")
+        print(f"❌ Error creating user directories: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 # ================================
@@ -521,7 +538,7 @@ def upload_avatar():
         ensure_user_directories(current_user)
         
         # Save to storage user directory
-        local_avatar_dir = os.path.join('storage', current_user, 'avatar')
+        local_avatar_dir = os.path.join(STORAGE_DIR, current_user, 'avatar')
         os.makedirs(local_avatar_dir, exist_ok=True)
         
         # Use secure filename and add timestamp to avoid caching issues
@@ -605,7 +622,7 @@ def upload_cover():
         ensure_user_directories(current_user)
         
         # Save to storage user directory
-        local_cover_dir = os.path.join('storage', current_user, 'cover')
+        local_cover_dir = os.path.join(STORAGE_DIR, current_user, 'cover')
         os.makedirs(local_cover_dir, exist_ok=True)
         
         # Use secure filename and add timestamp
@@ -648,7 +665,7 @@ def get_user_avatar(username):
     """Get user avatar URL"""
     try:
         # Check storage first
-        external_avatar_dir = os.path.join('storage', username, 'avatar')
+        external_avatar_dir = os.path.join(STORAGE_DIR, username, 'avatar')
         
         if os.path.exists(external_avatar_dir):
             # Find the latest avatar file
@@ -680,7 +697,7 @@ def get_user_cover(username):
     """Get user cover photo URL"""
     try:
         # Check storage first
-        external_cover_dir = os.path.join('storage', username, 'cover')
+        external_cover_dir = os.path.join(STORAGE_DIR, username, 'cover')
         
         if os.path.exists(external_cover_dir):
             # Find the latest cover file
@@ -767,62 +784,73 @@ def serve_assets(filename):
 @app.route('/api/serve_file/<username>/<filename>')
 @require_auth
 def serve_user_avatar_file(username, filename):
-    """Serve user avatar files from E drive (directly in user folder)"""
+    """Serve user avatar files from storage directory"""
     try:
-        if get_current_user() != username:
+        # Security check - prevent directory traversal
+        if '..' in filename or filename.startswith('/'):
             abort(403)
         
         # Serve from storage user folder
-        file_path = os.path.join('storage', username, filename)
+        file_path = os.path.join(STORAGE_DIR, username, 'avatar', filename)
         
         if os.path.exists(file_path):
             return send_file(file_path)
         else:
+            print(f"❌ Avatar file not found: {file_path}")
             abort(404)
-            
     except Exception as e:
         print(f"❌ Error serving avatar file: {e}")
-        return "Lỗi server", 500
+        abort(500)
 
 @app.route('/api/serve_file/<username>/<file_type>/<filename>')
 @require_auth
 def serve_user_media_file(username, file_type, filename):
-    """Serve user uploaded media files from E drive"""
+    """Serve user uploaded media files from storage directory"""
     try:
-        if get_current_user() != username:
+        # Security check - prevent directory traversal
+        if '..' in filename or filename.startswith('/') or '..' in file_type or file_type.startswith('/'):
             abort(403)
         
+        # Validate file type
+        if file_type not in ['images', 'videos']:
+            abort(400, description="Invalid file type")
+        
         # Serve from storage
-        file_path = os.path.join('storage', username, file_type, filename)
+        file_path = os.path.join(STORAGE_DIR, username, file_type, filename)
         
         if os.path.exists(file_path):
             return send_file(file_path)
         else:
+            print(f"❌ Media file not found: {file_path}")
             abort(404)
-            
     except Exception as e:
-        print(f"❌ Error serving file: {e}")
-        return "Lỗi server", 500
+        print(f"❌ Error serving media file: {e}")
+        abort(500)
 
 @app.route('/api/serve_file/<username>/<file_type>/<subfolder>/<filename>')
 @require_auth
 def serve_user_preview_file(username, file_type, subfolder, filename):
-    """Serve user preview files from E drive (like memories/previews/xxx.gif)"""
+    """Serve user preview files from storage directory"""
     try:
-        if get_current_user() != username:
+        # Security check - prevent directory traversal
+        if any(c in filename + file_type + subfolder for c in ['..', '/']):
             abort(403)
         
+        # Validate file type and subfolder
+        if file_type not in ['videos', 'memories'] or subfolder != 'previews':
+            abort(400, description="Invalid file type or subfolder")
+        
         # Serve from storage
-        file_path = os.path.join('storage', username, file_type, subfolder, filename)
+        file_path = os.path.join(STORAGE_DIR, username, file_type, 'previews', filename)
         
         if os.path.exists(file_path):
             return send_file(file_path)
         else:
+            print(f"❌ Preview file not found: {file_path}")
             abort(404)
-            
     except Exception as e:
         print(f"❌ Error serving preview file: {e}")
-        return "Lỗi server", 500
+        abort(500)
 
 # ================================
 # ERROR HANDLERS
@@ -867,110 +895,99 @@ def get_user_info():
 def upload_memory():
     """Upload images and videos to memory library"""
     try:
-        current_user = get_current_user()
-        
-        # Check if file is present
         if 'file' not in request.files:
-            return jsonify({
-                'success': False,
-                'message': 'Không có file được chọn'
-            }), 400
-        
+            return jsonify({'success': False, 'message': 'Không có file được chọn'}), 400
+            
         file = request.files['file']
-        
-        # Check if file is selected
         if file.filename == '':
-            return jsonify({
-                'success': False,
-                'message': 'Không có file được chọn'
-            }), 400
-        
-        # Validate file type
-        allowed_image_extensions = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'}
-        allowed_video_extensions = {'mp4', 'avi', 'mov', 'wmv', 'flv', 'webm', 'mkv'}
-        
-        file_extension = file.filename.lower().split('.')[-1] if '.' in file.filename else ''
-        
-        is_image = file_extension in allowed_image_extensions
-        is_video = file_extension in allowed_video_extensions
-        
-        if not (is_image or is_video):
-            return jsonify({
-                'success': False,
-                'message': 'Định dạng file không được hỗ trợ. Chỉ chấp nhận: JPG, PNG, GIF, MP4, AVI, MOV'
-            }), 400
-        
-        # Validate file size (50MB max for videos, 10MB for images)
-        file.seek(0, 2)  # Seek to end
-        file_size = file.tell()
-        file.seek(0)  # Reset to beginning
-        
-        max_size = 50 * 1024 * 1024 if is_video else 10 * 1024 * 1024  # 50MB for video, 10MB for image
-        if file_size > max_size:
-            max_size_mb = 50 if is_video else 10
-            return jsonify({
-                'success': False,
-                'message': f'File quá lớn. Tối đa {max_size_mb}MB.'
-            }), 400
-        
+            return jsonify({'success': False, 'message': 'Không có file được chọn'}), 400
+            
+        # Get current user
+        current_user = get_current_user()
+        if not current_user:
+            return jsonify({'success': False, 'message': 'Chưa đăng nhập'}), 401
+            
         # Ensure user directories exist
         ensure_user_directories(current_user)
         
+        # Check file type
+        filename = file.filename.lower()
+        is_image = filename.endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp'))
+        is_video = filename.endswith(('.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv'))
+        
+        if not (is_image or is_video):
+            return jsonify({
+                'success': False, 
+                'message': 'Định dạng file không được hỗ trợ. Chỉ chấp nhận ảnh (PNG, JPG, GIF, WEBP) và video (MP4, WebM, OGG, MOV, AVI, MKV)'
+            }), 400
+            
+        # Check file size
+        file_size = request.content_length
+        if is_image and file_size > 10 * 1024 * 1024:  # 10MB
+            return jsonify({
+                'success': False,
+                'message': 'File ảnh quá lớn. Tối đa 10MB.'
+            }), 400
+            
+        if is_video and file_size > 50 * 1024 * 1024:  # 50MB
+            return jsonify({
+                'success': False,
+                'message': 'File video quá lớn. Tối đa 50MB.'
+            }), 400
+            
         # Determine target directory - storage
         if is_image:
-            target_dir = os.path.join('storage', current_user, 'images')
+            target_dir = os.path.join(STORAGE_DIR, current_user, 'images')
         else:
-            target_dir = os.path.join('storage', current_user, 'videos')
+            target_dir = os.path.join(STORAGE_DIR, current_user, 'videos')
         
         os.makedirs(target_dir, exist_ok=True)
         
-        # Generate secure filename with timestamp
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        secure_name = secure_filename(file.filename)
-        filename = f'{timestamp}_{secure_name}'
+        # Generate unique filename with timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        file_extension = filename.rsplit('.', 1)[1].lower()
+        unique_filename = f'{timestamp}_{secrets.token_hex(8)}.{file_extension}'
         
-        # Save to E drive only
-        file_path = os.path.join(target_dir, filename)
+        # Save file
+        file_path = os.path.join(target_dir, unique_filename)
         file.save(file_path)
-        print(f"✅ File saved to E drive: {filename}")
         
-        # Generate video preview if it's a video
+        # For videos, generate preview
+        preview_url = None
         if is_video:
             try:
-                preview_dir = os.path.join(target_dir, 'previews')
+                # Generate preview in background
+                preview_filename = f'preview_{os.path.splitext(unique_filename)[0]}.gif'
+                preview_dir = os.path.join(STORAGE_DIR, current_user, 'videos', 'previews')
                 os.makedirs(preview_dir, exist_ok=True)
+                preview_path = os.path.join(preview_dir, preview_filename)
                 
                 # Generate preview using video_processor
-                preview_result = video_processor.generate_preview_thumbnail(file_path, preview_dir)
+                from video_processor import generate_preview_thumbnail
+                generate_preview_thumbnail(file_path, preview_path)
                 
-                if preview_result.get('success'):
-                    preview_filename = preview_result.get('preview_filename')
-                    if preview_filename:
-                        print(f"✅ Video preview generated: {preview_filename}")
-                else:
-                    print(f"⚠️ Could not generate preview for {filename}")
+                preview_url = f'/api/serve_file/{current_user}/videos/previews/{preview_filename}'
+                print(f'✅ Generated video preview: {preview_path}')
             except Exception as e:
-                print(f"⚠️ Error generating video preview: {e}")
+                print(f'❌ Error generating video preview: {e}')
         
-        file_type = 'image' if is_image else 'video'
-        file_url = f'/api/serve_file/{current_user}/{file_type}s/{filename}'
-        
-        print(f"✅ User {current_user} uploaded {file_type}: {filename}")
+        # Get file URL
+        file_url = f'/api/serve_file/{current_user}/videos/{unique_filename}' if is_video else f'/api/serve_file/{current_user}/images/{unique_filename}'
         
         return jsonify({
             'success': True,
-            'message': f'Tải lên {file_type} thành công!',
-            'filename': filename,
-            'file_url': file_url,
-            'file_type': file_type,
-            'file_size': file_size
+            'message': 'Tải lên thành công',
+            'fileUrl': file_url,
+            'previewUrl': preview_url,
+            'isVideo': is_video,
+            'filename': unique_filename
         })
         
     except Exception as e:
-        print(f"❌ Error uploading memory: {e}")
+        print(f'❌ Error uploading memory: {e}')
         return jsonify({
             'success': False,
-            'message': f'Lỗi upload file: {str(e)}'
+            'message': f'Lỗi khi tải lên: {str(e)}'
         }), 500
 
 @app.route('/api/create_moment', methods=['POST'])
@@ -995,7 +1012,7 @@ def create_moment():
         uploaded_files = []
         
         # Create user moment directory
-        user_moment_dir = os.path.join('storage', current_user, 'moments')
+        user_moment_dir = os.path.join(STORAGE_DIR, current_user, 'moments')
         os.makedirs(user_moment_dir, exist_ok=True)
         
         # Save uploaded files
@@ -1021,7 +1038,7 @@ def create_moment():
         }
         
         # Save to moments database (JSON file)
-        moments_file = os.path.join('storage', current_user, 'moments.json')
+        moments_file = os.path.join(STORAGE_DIR, current_user, 'moments.json')
         moments = []
         if os.path.exists(moments_file):
             with open(moments_file, 'r', encoding='utf-8') as f:
@@ -1050,7 +1067,7 @@ def get_moments():
     """Get all moments (videos) for current user from memories folder"""
     try:
         current_user = get_current_user()
-        memories_dir = os.path.join('storage', current_user, 'memories')
+        memories_dir = os.path.join(STORAGE_DIR, current_user, 'memories')
         previews_dir = os.path.join(memories_dir, 'previews')
         
         moments = []
@@ -1091,7 +1108,7 @@ def get_images():
     """Get all images for current user"""
     try:
         current_user = get_current_user()
-        images_dir = os.path.join('storage', current_user, 'images')
+        images_dir = os.path.join(STORAGE_DIR, current_user, 'images')
         
         images = []
         if os.path.exists(images_dir):
@@ -1124,7 +1141,7 @@ def get_videos():
     """Get all videos for current user"""
     try:
         current_user = get_current_user()
-        videos_dir = os.path.join('storage', current_user, 'videos')
+        videos_dir = os.path.join(STORAGE_DIR, current_user, 'videos')
         previews_dir = os.path.join(videos_dir, 'previews')
         
         videos = []
@@ -1181,7 +1198,8 @@ def get_memories():
     """Get all memories from user's memories directory"""
     try:
         current_user = get_current_user()
-        memories_dir = os.path.join('storage', current_user, 'memories')
+        memories_dir = os.path.join(STORAGE_DIR, current_user, 'memories')
+        previews_dir = os.path.join(memories_dir, 'previews')
         
         print(f"🔍 DEBUG get_memories: current_user = {current_user}")
         print(f"🔍 DEBUG get_memories: memories_dir = {memories_dir}")
@@ -1211,7 +1229,7 @@ def get_memories():
                     # Add preview for videos
                     if file_type == 'video':
                         preview_filename = f"preview_{os.path.splitext(filename)[0]}.gif"
-                        preview_path = os.path.join('storage', current_user, 'memories', 'previews', preview_filename)
+                        preview_path = os.path.join(previews_dir, preview_filename)
                         print(f"🔍 DEBUG get_memories: checking preview path = {preview_path}")
                         if os.path.exists(preview_path):
                             memory_item['preview'] = f'/api/serve_file/{current_user}/memories/previews/{preview_filename}'
@@ -1245,7 +1263,7 @@ def get_all_memories():
         all_memories = []
         
         # Get images
-        images_dir = os.path.join('storage', current_user, 'images')
+        images_dir = os.path.join(STORAGE_DIR, current_user, 'images')
         if os.path.exists(images_dir):
             for filename in os.listdir(images_dir):
                 if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp')):
@@ -1262,7 +1280,7 @@ def get_all_memories():
                     })
         
         # Get videos
-        videos_dir = os.path.join('storage', current_user, 'videos')
+        videos_dir = os.path.join(STORAGE_DIR, current_user, 'videos')
         if os.path.exists(videos_dir):
             previews_dir = os.path.join(videos_dir, 'previews')
             
@@ -1304,7 +1322,7 @@ def get_all_memories():
                     })
         
         # Get created moments
-        moments_file = os.path.join('storage', current_user, 'moments.json')
+        moments_file = os.path.join(STORAGE_DIR, current_user, 'moments.json')
         if os.path.exists(moments_file):
             with open(moments_file, 'r', encoding='utf-8') as f:
                 moments = json.load(f)
@@ -1336,7 +1354,7 @@ def get_user_profile():
     """Get user profile data (avatar, cover)"""
     try:
         current_user = get_current_user()
-        user_dir = os.path.join('storage', current_user)
+        user_dir = os.path.join(STORAGE_DIR, current_user)
         
         profile_data = {
             'username': current_user,
@@ -1353,7 +1371,7 @@ def get_user_profile():
                 # Get the most recent avatar file
                 avatar_files.sort(reverse=True)  # Sort by filename (timestamp)
                 latest_avatar = avatar_files[0]
-                profile_data['avatar_url'] = f'/user_files/{current_user}/avatar/{latest_avatar}'
+                profile_data['avatar_url'] = f'/api/serve_file/{current_user}/avatar/{latest_avatar}'
         
         # Check for cover (look for cover_*.ext files)
         cover_dir = os.path.join(user_dir, 'cover')
@@ -1378,19 +1396,18 @@ def get_user_profile():
 # USER FILES SERVING ROUTES
 # ==========================================
 
-@app.route('/user_files/<username>/avatar/<filename>')
+@app.route('/api/serve_file/<username>/avatar/<filename>')
 def serve_avatar(username, filename):
-    """Serve avatar files from external directory"""
+    """Serve avatar files from storage directory"""
     try:
-        # Serve from external directory first (correct path with avatar folder)
-        external_path = os.path.join(r'E:\EverLiving_UserData', username, 'avatar', filename)
-        if os.path.exists(external_path):
-            return send_file(external_path)
-        
-        # Fallback to local directory
-        local_path = os.path.join('static/user_files', username, 'avatar', filename)
-        if os.path.exists(local_path):
-            return send_file(local_path)
+        # Security check to prevent directory traversal
+        if '..' in filename or filename.startswith('/'):
+            abort(403)
+            
+        # Serve from storage directory
+        avatar_path = os.path.join(STORAGE_DIR, username, 'avatar', filename)
+        if os.path.exists(avatar_path):
+            return send_file(avatar_path)
         
         # If not found, return 404
         abort(404)
@@ -1399,19 +1416,18 @@ def serve_avatar(username, filename):
         print(f"❌ Error serving avatar {filename}: {e}")
         abort(404)
 
-@app.route('/user_files/<username>/cover/<filename>')  
+@app.route('/api/serve_file/<username>/cover/<filename>')  
 def serve_cover(username, filename):
-    """Serve cover files from external directory"""
+    """Serve cover files from storage directory"""
     try:
-        # Serve from external directory first
-        external_path = os.path.join(r'E:\EverLiving_UserData', username, 'cover', filename)
-        if os.path.exists(external_path):
-            return send_file(external_path)
-        
-        # Fallback to local directory
-        local_path = os.path.join('static/user_files', username, 'cover', filename)
-        if os.path.exists(local_path):
-            return send_file(local_path)
+        # Security check to prevent directory traversal
+        if '..' in filename or filename.startswith('/'):
+            abort(403)
+            
+        # Serve from storage directory
+        cover_path = os.path.join(STORAGE_DIR, username, 'cover', filename)
+        if os.path.exists(cover_path):
+            return send_file(cover_path)
         
         # If not found, return 404
         abort(404)
