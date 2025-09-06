@@ -1168,7 +1168,7 @@ def get_videos():
                     has_preview = False
                     base_filename = filename.rsplit('.', 1)[0]
                     
-                    # Pattern 1: preview_filename.gif
+                    # Pattern 1: preview_filename.gif (matching the upload_memory function)
                     preview_name1 = f"preview_{base_filename}.gif"
                     preview_path1 = os.path.join(previews_dir, preview_name1)
                     
