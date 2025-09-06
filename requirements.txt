@@ -3,10 +3,11 @@
 # Web Framework
 Flask==2.3.3
 Werkzeug==2.3.7
+gunicorn==21.2.0
 
 # Image & Video Processing
 Pillow==10.0.1
-opencv-python==4.8.1.78
+opencv-python-headless==4.8.1.78
 moviepy==1.0.3
 imageio==2.31.6
 imageio-ffmpeg==0.4.9
