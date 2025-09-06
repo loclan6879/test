@@ -4,6 +4,9 @@ FROM python:3.11-slim as builder
 # Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    python3-dev \
+    python3-pip \
+    python3-venv \
     && rm -rf /var/lib/apt/lists/*
 
 # Create virtual environment
@@ -20,12 +23,14 @@ FROM python:3.11-slim
 
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
     libxrender1 \
     ffmpeg \
+    libglx0 \
+    libgl1-mesa-dri \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy virtual environment from builder
