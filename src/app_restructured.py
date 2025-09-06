@@ -841,14 +841,25 @@ def serve_user_preview_file(username, file_type, subfolder, filename):
         if file_type not in ['videos', 'memories'] or subfolder != 'previews':
             abort(400, description="Invalid file type or subfolder")
         
-        # Serve from storage
+        # Build the full file path
         file_path = os.path.join(STORAGE_DIR, username, file_type, 'previews', filename)
         
-        if os.path.exists(file_path):
-            return send_file(file_path)
-        else:
+        # Check if path exists and is a file (not a directory)
+        if not os.path.exists(file_path):
             print(f"❌ Preview file not found: {file_path}")
             abort(404)
+            
+        if not os.path.isfile(file_path):
+            print(f"❌ Preview path is not a file: {file_path}")
+            abort(404)
+            
+        # Check if the preview file is empty (0 bytes)
+        if os.path.getsize(file_path) == 0:
+            print(f"⚠️ Preview file is empty: {file_path}")
+            abort(404)
+            
+        return send_file(file_path)
+        
     except Exception as e:
         print(f"❌ Error serving preview file: {e}")
         abort(500)
@@ -1139,7 +1150,7 @@ def get_images():
 @app.route('/api/get_videos')
 @require_auth
 def get_videos():
-    """Get all videos for current user"""
+    """Get all videos for current user with improved preview handling"""
     try:
         current_user = get_current_user()
         videos_dir = os.path.join(STORAGE_DIR, current_user, 'videos')
@@ -1155,21 +1166,30 @@ def get_videos():
                     # Check for preview GIF
                     preview_name = None
                     has_preview = False
+                    base_filename = filename.rsplit('.', 1)[0]
                     
-                    # Pattern 1: upload_preview_filename.gif
-                    preview_name1 = f"upload_preview_{filename.rsplit('.', 1)[0]}.gif"
+                    # Pattern 1: preview_filename.gif
+                    preview_name1 = f"preview_{base_filename}.gif"
                     preview_path1 = os.path.join(previews_dir, preview_name1)
                     
                     # Pattern 2: Look for any preview file containing the video name
-                    if os.path.exists(previews_dir):
+                    if os.path.exists(previews_dir) and os.path.isdir(previews_dir):
                         for preview_file in os.listdir(previews_dir):
-                            if preview_file.endswith('.gif') and filename.rsplit('.', 1)[0] in preview_file:
+                            preview_path = os.path.join(previews_dir, preview_file)
+                            # Only consider files (not directories) with .gif extension
+                            if (os.path.isfile(preview_path) and 
+                                preview_file.endswith('.gif') and 
+                                base_filename in preview_file and
+                                os.path.getsize(preview_path) > 0):  # Ensure file is not empty
                                 preview_name = preview_file
                                 has_preview = True
                                 break
                     
-                    # Fallback to pattern 1 if no preview found
-                    if not has_preview and os.path.exists(preview_path1):
+                    # Fallback to pattern 1 if no preview found and it's a valid file
+                    if (not has_preview and 
+                        os.path.exists(preview_path1) and 
+                        os.path.isfile(preview_path1) and 
+                        os.path.getsize(preview_path1) > 0):
                         preview_name = preview_name1
                         has_preview = True
                     
@@ -1191,6 +1211,8 @@ def get_videos():
         })
         
     except Exception as e:
+        import traceback
+        print(f"Error in get_videos: {str(e)}\n{traceback.format_exc()}")
         return jsonify({'success': False, 'message': str(e)}), 500
 
 @app.route('/api/get_memories')
