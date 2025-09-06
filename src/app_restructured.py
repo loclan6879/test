@@ -842,19 +842,31 @@ def serve_user_preview_file(username, file_type, subfolder, filename):
             abort(400, description="Invalid file type or subfolder")
         
         # Build the full file path
-        file_path = os.path.join(STORAGE_DIR, username, file_type, 'previews', filename)
+        previews_dir = os.path.join(STORAGE_DIR, username, file_type, 'previews')
+        file_path = os.path.join(previews_dir, filename)
+        
+        print(f"🔍 Looking for preview file at: {file_path}")
+        print(f"🔍 STORAGE_DIR: {STORAGE_DIR}")
+        print(f"🔍 Previews dir exists: {os.path.exists(previews_dir)}")
+        if os.path.exists(previews_dir):
+            print(f"🔍 Files in previews dir: {os.listdir(previews_dir)}")
         
         # Check if path exists and is a file (not a directory)
         if not os.path.exists(file_path):
             print(f"❌ Preview file not found: {file_path}")
+            print(f"❌ Current working directory: {os.getcwd()}")
+            print(f"❌ Absolute path exists: {os.path.exists(os.path.abspath(file_path))}")
             abort(404)
             
         if not os.path.isfile(file_path):
             print(f"❌ Preview path is not a file: {file_path}")
+            print(f"❌ Is directory: {os.path.isdir(file_path)}")
             abort(404)
             
         # Check if the preview file is empty (0 bytes)
-        if os.path.getsize(file_path) == 0:
+        file_size = os.path.getsize(file_path)
+        print(f"📏 Preview file size: {file_size} bytes")
+        if file_size == 0:
             print(f"⚠️ Preview file is empty: {file_path}")
             abort(404)
             
